@@ -58,7 +58,7 @@ cat tests/input.json | argocd-report -o report.html
 ```yaml
 generate-deploy-report:
   stage: deploy
-  image: docker.io/ndkprd/argocd-report:latest
+  image: ghcr.io/ndkprd/argocd-report:latest
   script:
     - argocd app get ${ARGOCD_APP_NAME} -o json | argocd-report -o report.html -title "Deploy Report for ${CI_PROJECT_NAME} (${CI_ENVIRONMENT_NAME})"
   artifacts:
