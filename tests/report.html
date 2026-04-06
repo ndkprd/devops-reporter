@@ -1,0 +1,2547 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArgoCD Application Report</title>
+  <style>
+     
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1a1916;
+      --ink-muted:  #5a5753;
+      --paper:      #faf9f6;
+      --rule:       #d4cfc8;
+      --rule-heavy: #9a9490;
+
+      --synced-bg:  #f0f7f2;
+      --synced-fg:  #1b5e38;
+      --synced-bd:  #2e7d52;
+
+      --oos-bg:     #fdf0f0;
+      --oos-fg:     #7a1515;
+      --oos-bd:     #c0392b;
+
+      --prog-bg:    #fdf5ec;
+      --prog-fg:    #7a3800;
+      --prog-bd:    #d4691e;
+
+      --neutral-bg: #f4f4f2;
+      --neutral-fg: #4a4844;
+      --neutral-bd: #8a8480;
+
+      --unknown-bg: #f4f4f2;
+      --unknown-fg: #6a6664;
+      --unknown-bd: #b0acaa;
+
+      --accent:     #5c1a1a;
+      --accent-2:   #1a3a5c;
+    }
+
+    html {
+      font-size: 13px;
+      background: #e8e5e0;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', Times, serif;
+      color: var(--ink);
+      background: var(--paper);
+      max-width: 1020px;
+      margin: 2rem auto;
+      padding: 0;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.18);
+    }
+
+     
+    .report-header {
+      padding: 2.8rem 3rem 2rem;
+      border-top: 6px solid var(--accent);
+      border-bottom: 2px solid var(--rule-heavy);
+      position: relative;
+    }
+
+    .report-header.header-fail {
+      border-top-color: var(--oos-bd);
+    }
+
+    .report-header.header-pass {
+      border-top-color: var(--synced-bd);
+    }
+
+    .header-stamp {
+      position: absolute;
+      top: 2.2rem;
+      right: 3rem;
+      text-align: right;
+    }
+
+    .header-stamp .stamp-row {
+      display: block;
+      margin-bottom: 0.25rem;
+    }
+
+    .header-stamp .stamp-label {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.68rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      display: inline-block;
+      margin-right: 0.3rem;
+    }
+
+    .header-stamp .stamp-value {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.75rem;
+      color: var(--ink);
+    }
+
+    .header-stamp .stamp-value.rev {
+      color: var(--accent-2);
+    }
+
+    .report-eyebrow {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--ink-muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .report-title {
+      font-size: 1.9rem;
+      font-weight: normal;
+      letter-spacing: -0.01em;
+      line-height: 1.2;
+      color: var(--ink);
+    }
+
+    .report-subtitle {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.78rem;
+      color: var(--ink-muted);
+      margin-top: 0.6rem;
+      display: flex;
+      gap: 1.4rem;
+      flex-wrap: wrap;
+    }
+
+    .subtitle-item strong {
+      font-weight: normal;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 0.65rem;
+      display: block;
+    }
+
+     
+    .status-banner {
+      padding: 0.6rem 3rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .status-banner.all-good {
+      background: var(--synced-bg);
+      color: var(--synced-fg);
+      border-bottom-color: var(--synced-bd);
+    }
+
+    .status-banner.has-issues {
+      background: var(--oos-bg);
+      color: var(--oos-fg);
+      border-bottom-color: var(--oos-bd);
+    }
+
+    .status-banner::before {
+      content: '▶  ';
+    }
+
+    .status-pill {
+      display: inline-block;
+      padding: 0.1rem 0.5rem;
+      font-size: 0.65rem;
+      border: 1px solid currentColor;
+      opacity: 0.85;
+    }
+
+     
+    .op-banner {
+      padding: 0.5rem 3rem;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      border-bottom: 1px solid var(--rule);
+      display: flex;
+      align-items: center;
+      gap: 0.8rem;
+    }
+
+    .op-banner.op-succeeded { background: var(--synced-bg); color: var(--synced-fg); border-bottom-color: var(--synced-bd); }
+    .op-banner.op-failed,
+    .op-banner.op-error     { background: var(--oos-bg);    color: var(--oos-fg);    border-bottom-color: var(--oos-bd); }
+    .op-banner.op-running   { background: var(--prog-bg);   color: var(--prog-fg);   border-bottom-color: var(--prog-bd); }
+    .op-banner.op-unknown   { background: var(--neutral-bg); color: var(--neutral-fg); }
+
+    .op-phase-label {
+      font-weight: bold;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      font-size: 0.65rem;
+      border: 1px solid currentColor;
+      padding: 0.1rem 0.4rem;
+      flex-shrink: 0;
+    }
+
+     
+    .info-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      border-bottom: 2px solid var(--rule);
+    }
+
+    .info-block {
+      padding: 1.4rem 3rem;
+    }
+
+    .info-block:first-child {
+      border-right: 1px solid var(--rule-heavy);
+    }
+
+    .info-block-title {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--ink-muted);
+      margin-bottom: 0.8rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .info-row {
+      display: flex;
+      gap: 0.6rem;
+      margin-bottom: 0.45rem;
+      align-items: flex-start;
+    }
+
+    .info-row:last-child { margin-bottom: 0; }
+
+    .info-key {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.62rem;
+      color: var(--ink-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      width: 70px;
+      flex-shrink: 0;
+      padding-top: 0.05rem;
+    }
+
+    .info-val {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.75rem;
+      color: var(--ink);
+      word-break: break-all;
+      flex: 1;
+    }
+
+    .info-val.rev {
+      color: var(--accent-2);
+    }
+
+     
+    .summary-section {
+      padding: 2rem 3rem;
+      border-bottom: 2px solid var(--rule);
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 1px;
+      background: var(--rule);
+      border: 1px solid var(--rule);
+    }
+
+    .stat-card {
+      background: var(--paper);
+      padding: 1.2rem 0.8rem;
+      text-align: center;
+    }
+
+    .stat-card .stat-number {
+      font-family: 'Georgia', serif;
+      font-size: 2.4rem;
+      font-weight: bold;
+      line-height: 1;
+      display: block;
+      margin-bottom: 0.35rem;
+    }
+
+    .stat-card .stat-label {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.58rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ink-muted);
+    }
+
+    .stat-card.stat-synced    .stat-number { color: var(--synced-fg); }
+    .stat-card.stat-outofsync .stat-number { color: var(--oos-fg); }
+    .stat-card.stat-healthy   .stat-number { color: var(--synced-fg); }
+    .stat-card.stat-degraded  .stat-number { color: var(--oos-fg); }
+    .stat-card.stat-progressing .stat-number { color: var(--prog-fg); }
+    .stat-card.stat-unknown   .stat-number { color: var(--neutral-fg); }
+
+     
+    .resources-section {
+      padding: 1.6rem 3rem 2rem;
+      border-bottom: 2px solid var(--rule);
+    }
+
+    .resources-section:last-of-type {
+      border-bottom: none;
+    }
+
+    .section-heading {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--ink-muted);
+      margin-bottom: 1.4rem;
+      padding-bottom: 0.3rem;
+      border-bottom: 1px solid var(--rule);
+    }
+
+    .kind-section {
+      margin-bottom: 2.2rem;
+    }
+
+    .kind-section:last-child {
+      margin-bottom: 0;
+    }
+
+    .kind-heading {
+      display: flex;
+      align-items: baseline;
+      gap: 0.8rem;
+      padding-bottom: 0.4rem;
+      border-bottom: 1px solid var(--rule-heavy);
+      margin-bottom: 0;
+    }
+
+    .kind-name {
+      font-family: 'Georgia', serif;
+      font-size: 1.05rem;
+      font-weight: bold;
+      color: var(--accent-2);
+    }
+
+    .kind-count {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+     
+    .resource-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.78rem;
+    }
+
+    .resource-table thead tr {
+      border-bottom: 1px solid var(--rule-heavy);
+      background: transparent;
+    }
+
+    .resource-table th {
+      text-align: left;
+      padding: 0.55rem 0.6rem 0.45rem;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.14em;
+      color: var(--ink-muted);
+      font-family: 'Courier New', Courier, monospace;
+      font-weight: normal;
+    }
+
+    .resource-table td {
+      padding: 0.55rem 0.6rem;
+      border-bottom: 1px solid var(--rule);
+      vertical-align: middle;
+      word-break: break-word;
+    }
+
+    .resource-table tbody tr:last-child td {
+      border-bottom: none;
+    }
+
+    .resource-table tbody tr.row-outofsync {
+      background: rgba(192, 57, 43, 0.04);
+    }
+
+    .resource-table tbody tr.row-degraded,
+    .resource-table tbody tr.row-missing {
+      background: rgba(192, 57, 43, 0.04);
+    }
+
+    .resource-table tbody tr.row-progressing {
+      opacity: 0.82;
+    }
+
+    .col-name    { width: 26%; }
+    .col-ns      { width: 22%; }
+    .col-version { width: 18%; }
+    .col-sync    { width: 12%; }
+    .col-health  { width: 12%; }
+    .col-msg     { color: var(--ink-muted); font-style: italic; }
+
+     
+    .badge {
+      display: inline-block;
+      padding: 0.15rem 0.5rem;
+      font-size: 0.62rem;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-family: 'Courier New', Courier, monospace;
+      border: 1px solid;
+    }
+
+    .badge.sync-synced    { background: var(--synced-bg);  color: var(--synced-fg);  border-color: var(--synced-bd); }
+    .badge.sync-outofsync { background: var(--oos-bg);     color: var(--oos-fg);     border-color: var(--oos-bd); }
+    .badge.sync-unknown   { background: var(--unknown-bg); color: var(--unknown-fg); border-color: var(--unknown-bd); }
+
+    .badge.health-healthy     { background: var(--synced-bg);  color: var(--synced-fg);  border-color: var(--synced-bd); }
+    .badge.health-degraded    { background: var(--oos-bg);     color: var(--oos-fg);     border-color: var(--oos-bd); }
+    .badge.health-missing     { background: var(--oos-bg);     color: var(--oos-fg);     border-color: var(--oos-bd); }
+    .badge.health-progressing { background: var(--prog-bg);    color: var(--prog-fg);    border-color: var(--prog-bd); }
+    .badge.health-suspended   { background: var(--neutral-bg); color: var(--neutral-fg); border-color: var(--neutral-bd); }
+    .badge.health-unknown     { background: var(--unknown-bg); color: var(--unknown-fg); border-color: var(--unknown-bd); }
+
+    .badge.op-succeeded { background: var(--synced-bg);  color: var(--synced-fg);  border-color: var(--synced-bd); }
+    .badge.op-failed,
+    .badge.op-error     { background: var(--oos-bg);     color: var(--oos-fg);     border-color: var(--oos-bd); }
+    .badge.op-running   { background: var(--prog-bg);    color: var(--prog-fg);    border-color: var(--prog-bd); }
+    .badge.op-unknown   { background: var(--unknown-bg); color: var(--unknown-fg); border-color: var(--unknown-bd); }
+
+     
+    .artifact-list {
+      list-style: none;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.5rem;
+    }
+
+    .artifact-item {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.72rem;
+      padding: 0.15rem 0.5rem;
+      border: 1px solid var(--rule-heavy);
+      color: var(--ink-muted);
+    }
+
+    .artifact-subhead {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.65rem;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      color: var(--ink-muted);
+      margin-bottom: 0.4rem;
+      margin-top: 1rem;
+    }
+
+    .artifact-subhead:first-child {
+      margin-top: 0;
+    }
+
+     
+    .no-resources {
+      padding: 2rem 0;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.82rem;
+      color: var(--ink-muted);
+      text-align: center;
+    }
+
+     
+    .report-footer {
+      padding: 1rem 3rem;
+      border-top: 2px solid var(--rule);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .footer-total {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.72rem;
+      color: var(--ink-muted);
+    }
+
+    .footer-brand {
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 0.68rem;
+      color: var(--rule-heavy);
+      letter-spacing: 0.08em;
+    }
+
+     
+    @media print {
+      html { font-size: 11px; background: white; }
+      body { max-width: none; margin: 0; box-shadow: none; background: white; }
+      .kind-section { page-break-inside: avoid; }
+      .kind-heading { page-break-after: avoid; }
+      .resource-table thead { display: table-header-group; }
+      .resource-table tr { page-break-inside: avoid; }
+      .summary-grid { page-break-inside: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  
+  <header class="report-header header-pass">
+    <div class="header-stamp">
+      <span class="stamp-row">
+        <span class="stamp-label">Generated</span>
+        <span class="stamp-value">2026-04-06 06:58:53 UTC</span>
+      </span>
+      
+      <span class="stamp-row">
+        <span class="stamp-label">Revision</span>
+        <span class="stamp-value rev">4abcef1</span>
+      </span>
+      
+      <span class="stamp-row">
+        <span class="stamp-label">Namespace</span>
+        <span class="stamp-value">asdp-devops-argocd</span>
+      </span>
+    </div>
+    <p class="report-eyebrow">ArgoCD Deployment Report</p>
+    <h1 class="report-title">asdp-devops-argocd-devops-dc1</h1>
+    <div class="report-subtitle">
+      
+      <span class="subtitle-item">
+        <strong>Project</strong>devops
+      </span>
+      
+      
+      <span class="subtitle-item">
+        <strong>Source type</strong>Kustomize
+      </span>
+      
+      <span class="subtitle-item">
+        <strong>Resources</strong>81
+      </span>
+    </div>
+  </header>
+
+  
+  <div class="status-banner all-good">
+    <span>Sync: <span class="status-pill">Synced</span></span>
+    <span>Health: <span class="status-pill">Healthy</span></span>
+  </div>
+
+  
+  
+  <div class="op-banner op-succeeded">
+    <span class="op-phase-label">Succeeded</span>
+    <span>successfully synced (all tasks run)</span>
+  </div>
+  
+
+  
+  <div class="info-panel">
+    <div class="info-block">
+      <div class="info-block-title">Source</div>
+      <div class="info-row">
+        <span class="info-key">Repo</span>
+        <span class="info-val">git@ssh.git.devops.asdp.id:asdp-devops/k8s/k8s-manifests/devops/argocd.git</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Path</span>
+        <span class="info-val">kustomize/overlays/devops</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Revision</span>
+        <span class="info-val">HEAD → <span class="rev">4abcef1</span></span>
+      </div>
+    </div>
+    <div class="info-block">
+      <div class="info-block-title">Destination</div>
+      <div class="info-row">
+        <span class="info-key">Server</span>
+        <span class="info-val">https://api.k8s-devops.dc1.asdp.id:6443</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Namespace</span>
+        <span class="info-val">asdp-devops-argocd</span>
+      </div>
+      <div class="info-row">
+        <span class="info-key">Project</span>
+        <span class="info-val">devops</span>
+      </div>
+    </div>
+  </div>
+
+  
+  <section class="summary-section">
+    <div class="summary-grid">
+      <div class="stat-card stat-synced">
+        <span class="stat-number">81</span>
+        <span class="stat-label">Synced</span>
+      </div>
+      <div class="stat-card stat-outofsync">
+        <span class="stat-number">0</span>
+        <span class="stat-label">Out of Sync</span>
+      </div>
+      <div class="stat-card stat-healthy">
+        <span class="stat-number">19</span>
+        <span class="stat-label">Healthy</span>
+      </div>
+      <div class="stat-card stat-degraded">
+        <span class="stat-number">0</span>
+        <span class="stat-label">Degraded</span>
+      </div>
+      <div class="stat-card stat-progressing">
+        <span class="stat-number">0</span>
+        <span class="stat-label">Missing</span>
+      </div>
+      <div class="stat-card stat-unknown">
+        <span class="stat-number">0</span>
+        <span class="stat-label">Unknown</span>
+      </div>
+    </div>
+  </section>
+
+  
+  <section class="resources-section">
+    <div class="section-heading">Resources — by kind</div>
+    
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">AppProject</span>
+        <span class="kind-count">4 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">devops</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">argoproj.io/v1alpha1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">itops</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">argoproj.io/v1alpha1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">production</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">argoproj.io/v1alpha1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">staging</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">argoproj.io/v1alpha1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ClusterRole</span>
+        <span class="kind-count">3 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ClusterRoleBinding</span>
+        <span class="kind-count">4 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server-cluster-admin-crb</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ConfigMap</span>
+        <span class="kind-count">7 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-cmd-params-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-gpg-keys-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-notifications-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-rbac-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-ssh-known-hosts-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-tls-certs-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">CustomResourceDefinition</span>
+        <span class="kind-count">3 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">applications.argoproj.io</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">apiextensions.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">applicationsets.argoproj.io</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">apiextensions.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">appprojects.argoproj.io</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">apiextensions.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Deployment</span>
+        <span class="kind-count">6 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">apps/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">apps/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">apps/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">apps/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-repo-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">apps/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">apps/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Ingress</span>
+        <span class="kind-count">1 resource</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-server-ingress</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">networking.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Namespace</span>
+        <span class="kind-count">1 resource</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">asdp-devops-argocd</td>
+            <td class="col-ns">&mdash;</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">NetworkPolicy</span>
+        <span class="kind-count">7 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-application-controller-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">networking.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-applicationset-controller-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">networking.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-dex-server-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">networking.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-notifications-controller-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">networking.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-redis-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">networking.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-repo-server-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">networking.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">networking.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Role</span>
+        <span class="kind-count">6 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">RoleBinding</span>
+        <span class="kind-count">6 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">rbac.authorization.k8s.io/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Secret</span>
+        <span class="kind-count">10 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-notifications-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">asdp-gitlab-repo-ssh-private-key</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">gitlab-token-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">k8s-devops-dc1-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">k8s-itops-hq-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">k8s-manifests-repo-cert-manager</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">ocp-prod-dc1-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">ocp-prod-dc2-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">ocp-qa-dc2-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Service</span>
+        <span class="kind-count">8 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-notifications-controller-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-repo-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ServiceAccount</span>
+        <span class="kind-count">7 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-repo-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ServiceMonitor</span>
+        <span class="kind-count">7 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-applicationset-controller-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">monitoring.coreos.com/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">monitoring.coreos.com/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">monitoring.coreos.com/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">monitoring.coreos.com/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-redis-haproxy-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">monitoring.coreos.com/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-repo-server-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">monitoring.coreos.com/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+          <tr class="">
+            <td class="col-name">argocd-server-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">monitoring.coreos.com/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health">&mdash;</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">StatefulSet</span>
+        <span class="kind-count">1 resource</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-version">API Version</th>
+            <th class="col-sync">Sync</th>
+            <th class="col-health">Health</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr class="">
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-version">apps/v1</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-health"><span class="badge health-healthy">Healthy</span></td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    
+  </section>
+
+  
+  
+  <section class="resources-section">
+    <div class="section-heading">Last Sync Operation — resource results</div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">AppProject</span>
+        <span class="kind-count">4 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">devops</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">appproject.argoproj.io/devops unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">itops</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">appproject.argoproj.io/itops unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">production</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">appproject.argoproj.io/production unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">staging</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">appproject.argoproj.io/staging unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ClusterRole</span>
+        <span class="kind-count">3 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">clusterrole.rbac.authorization.k8s.io/argocd-application-controller reconciled. clusterrole.rbac.authorization.k8s.io/argocd-application-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">clusterrole.rbac.authorization.k8s.io/argocd-applicationset-controller reconciled. clusterrole.rbac.authorization.k8s.io/argocd-applicationset-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">clusterrole.rbac.authorization.k8s.io/argocd-server reconciled. clusterrole.rbac.authorization.k8s.io/argocd-server unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ClusterRoleBinding</span>
+        <span class="kind-count">4 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">clusterrolebinding.rbac.authorization.k8s.io/argocd-application-controller reconciled. clusterrolebinding.rbac.authorization.k8s.io/argocd-application-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">clusterrolebinding.rbac.authorization.k8s.io/argocd-applicationset-controller reconciled. clusterrolebinding.rbac.authorization.k8s.io/argocd-applicationset-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">clusterrolebinding.rbac.authorization.k8s.io/argocd-server reconciled. clusterrolebinding.rbac.authorization.k8s.io/argocd-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server-cluster-admin-crb</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">clusterrolebinding.rbac.authorization.k8s.io/argocd-server-cluster-admin-crb reconciled. clusterrolebinding.rbac.authorization.k8s.io/argocd-server-cluster-admin-crb unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ConfigMap</span>
+        <span class="kind-count">7 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">configmap/argocd-cm configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-cmd-params-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">configmap/argocd-cmd-params-cm unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-gpg-keys-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">configmap/argocd-gpg-keys-cm unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-notifications-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">configmap/argocd-notifications-cm unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-rbac-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">configmap/argocd-rbac-cm unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-ssh-known-hosts-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">configmap/argocd-ssh-known-hosts-cm unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-tls-certs-cm</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">configmap/argocd-tls-certs-cm unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">CustomResourceDefinition</span>
+        <span class="kind-count">3 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">applications.argoproj.io</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">customresourcedefinition.apiextensions.k8s.io/applications.argoproj.io unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">applicationsets.argoproj.io</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">customresourcedefinition.apiextensions.k8s.io/applicationsets.argoproj.io unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">appprojects.argoproj.io</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">customresourcedefinition.apiextensions.k8s.io/appprojects.argoproj.io unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Deployment</span>
+        <span class="kind-count">6 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">deployment.apps/argocd-applicationset-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">deployment.apps/argocd-dex-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">deployment.apps/argocd-notifications-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">deployment.apps/argocd-redis unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-repo-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">deployment.apps/argocd-repo-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">deployment.apps/argocd-server unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Ingress</span>
+        <span class="kind-count">1 resource</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-server-ingress</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">ingress.networking.k8s.io/argocd-server-ingress unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Namespace</span>
+        <span class="kind-count">1 resource</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">asdp-devops-argocd</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">namespace/asdp-devops-argocd unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">NetworkPolicy</span>
+        <span class="kind-count">7 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-application-controller-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">networkpolicy.networking.k8s.io/argocd-application-controller-network-policy configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-applicationset-controller-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">networkpolicy.networking.k8s.io/argocd-applicationset-controller-network-policy unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-dex-server-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">networkpolicy.networking.k8s.io/argocd-dex-server-network-policy unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-notifications-controller-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">networkpolicy.networking.k8s.io/argocd-notifications-controller-network-policy unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-redis-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">networkpolicy.networking.k8s.io/argocd-redis-network-policy unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-repo-server-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">networkpolicy.networking.k8s.io/argocd-repo-server-network-policy configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server-network-policy</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">networkpolicy.networking.k8s.io/argocd-server-network-policy unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Role</span>
+        <span class="kind-count">6 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">role.rbac.authorization.k8s.io/argocd-application-controller reconciled. role.rbac.authorization.k8s.io/argocd-application-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">role.rbac.authorization.k8s.io/argocd-applicationset-controller reconciled. role.rbac.authorization.k8s.io/argocd-applicationset-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">role.rbac.authorization.k8s.io/argocd-dex-server reconciled. role.rbac.authorization.k8s.io/argocd-dex-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">role.rbac.authorization.k8s.io/argocd-notifications-controller reconciled. role.rbac.authorization.k8s.io/argocd-notifications-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">role.rbac.authorization.k8s.io/argocd-redis reconciled. role.rbac.authorization.k8s.io/argocd-redis unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">role.rbac.authorization.k8s.io/argocd-server reconciled. role.rbac.authorization.k8s.io/argocd-server unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">RoleBinding</span>
+        <span class="kind-count">6 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">rolebinding.rbac.authorization.k8s.io/argocd-application-controller reconciled. rolebinding.rbac.authorization.k8s.io/argocd-application-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">rolebinding.rbac.authorization.k8s.io/argocd-applicationset-controller reconciled. rolebinding.rbac.authorization.k8s.io/argocd-applicationset-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">rolebinding.rbac.authorization.k8s.io/argocd-dex-server reconciled. rolebinding.rbac.authorization.k8s.io/argocd-dex-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">rolebinding.rbac.authorization.k8s.io/argocd-notifications-controller reconciled. rolebinding.rbac.authorization.k8s.io/argocd-notifications-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">rolebinding.rbac.authorization.k8s.io/argocd-redis reconciled. rolebinding.rbac.authorization.k8s.io/argocd-redis unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">rolebinding.rbac.authorization.k8s.io/argocd-server reconciled. rolebinding.rbac.authorization.k8s.io/argocd-server unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Secret</span>
+        <span class="kind-count">10 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-notifications-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/argocd-notifications-secret unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/argocd-secret configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">asdp-gitlab-repo-ssh-private-key</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/asdp-gitlab-repo-ssh-private-key configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">gitlab-token-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/gitlab-token-secret configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">k8s-devops-dc1-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/k8s-devops-dc1-cluster-secret configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">k8s-itops-hq-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/k8s-itops-hq-cluster-secret configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">k8s-manifests-repo-cert-manager</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/k8s-manifests-repo-cert-manager configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">ocp-prod-dc1-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/ocp-prod-dc1-cluster-secret configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">ocp-prod-dc2-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/ocp-prod-dc2-cluster-secret configured</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">ocp-qa-dc2-cluster-secret</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">secret/ocp-qa-dc2-cluster-secret configured</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">Service</span>
+        <span class="kind-count">8 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">service/argocd-applicationset-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">service/argocd-dex-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">service/argocd-metrics unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-notifications-controller-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">service/argocd-notifications-controller-metrics unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">service/argocd-redis unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-repo-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">service/argocd-repo-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">service/argocd-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">service/argocd-server-metrics unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ServiceAccount</span>
+        <span class="kind-count">7 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">serviceaccount/argocd-application-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-applicationset-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">serviceaccount/argocd-applicationset-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">serviceaccount/argocd-dex-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">serviceaccount/argocd-notifications-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-redis</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">serviceaccount/argocd-redis unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-repo-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">serviceaccount/argocd-repo-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">serviceaccount/argocd-server unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">ServiceMonitor</span>
+        <span class="kind-count">7 resources</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-applicationset-controller-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">servicemonitor.monitoring.coreos.com/argocd-applicationset-controller-metrics unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-dex-server</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">servicemonitor.monitoring.coreos.com/argocd-dex-server unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">servicemonitor.monitoring.coreos.com/argocd-metrics unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-notifications-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">servicemonitor.monitoring.coreos.com/argocd-notifications-controller unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-redis-haproxy-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">servicemonitor.monitoring.coreos.com/argocd-redis-haproxy-metrics unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-repo-server-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">servicemonitor.monitoring.coreos.com/argocd-repo-server-metrics unchanged</td>
+          </tr>
+          
+          <tr>
+            <td class="col-name">argocd-server-metrics</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">servicemonitor.monitoring.coreos.com/argocd-server-metrics unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="kind-section">
+      <div class="kind-heading">
+        <span class="kind-name">StatefulSet</span>
+        <span class="kind-count">1 resource</span>
+      </div>
+      <table class="resource-table">
+        <thead>
+          <tr>
+            <th class="col-name">Name</th>
+            <th class="col-ns">Namespace</th>
+            <th class="col-sync">Status</th>
+            <th class="col-msg">Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          
+          <tr>
+            <td class="col-name">argocd-application-controller</td>
+            <td class="col-ns">asdp-devops-argocd</td>
+            <td class="col-sync"><span class="badge sync-synced">Synced</span></td>
+            <td class="col-msg">statefulset.apps/argocd-application-controller unchanged</td>
+          </tr>
+          
+        </tbody>
+      </table>
+    </div>
+    
+  </section>
+  
+
+  
+  
+  <section class="resources-section">
+    <div class="section-heading">Artifacts</div>
+    
+    <p class="artifact-subhead">External URLs</p>
+    <ul class="artifact-list">
+      <li class="artifact-item">http://argocd.devops.asdp.id/</li><li class="artifact-item">http://cd.devops.asdp.id/</li>
+    </ul>
+    
+    
+    <p class="artifact-subhead">Container Images</p>
+    <ul class="artifact-list">
+      <li class="artifact-item">docker.io/redis:7.4.7-alpine</li><li class="artifact-item">ghcr.io/dexidp/dex:v2.38.0</li><li class="artifact-item">quay.asdp.io/argoproj/argocd:v3.1.12</li><li class="artifact-item">quay.io/argoprojlabs/argocd-extension-installer:v0.0.1</li>
+    </ul>
+    
+  </section>
+  
+
+  
+  <footer class="report-footer">
+    <span class="footer-total">81 resources &nbsp;·&nbsp; 81 synced &nbsp;·&nbsp; 0 out-of-sync &nbsp;·&nbsp; 19 healthy &nbsp;·&nbsp; 0 degraded</span>
+    <span class="footer-brand">argocd-report</span>
+  </footer>
+
+</body>
+</html>

@@ -1,0 +1,12 @@
+# Binaries
+argocd-report
+argocd-report.exe
+
+# Build output
+*.html
+!tests/*.html
+
+# Go
+*.test
+*.out
+vendor/
