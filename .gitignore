@@ -4,6 +4,7 @@ argocd-report.exe
 
 # Build output
 *.html
+!cmd/*.html
 !tests/*.html
 
 # Go
