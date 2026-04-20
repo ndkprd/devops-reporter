@@ -23,6 +23,9 @@
   "overrides": {
     "webpack": "^5.98.0"
   },
+  "resolutions": {
+    "webpack": "^5.98.0"
+  },
   "engines": {
     "node": ">=18.0"
   }
