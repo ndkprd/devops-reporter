@@ -3,8 +3,8 @@ devops-reporter
 devops-reporter.exe
 
 # Non-defaults
-templates/**/*.template.html
-tests/**/*.report.html
+templates/
+tests/
 
 # Go
 *.test

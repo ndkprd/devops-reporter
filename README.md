@@ -12,6 +12,7 @@ This project is independently developed and is not affiliated with, endorsed by,
 |---|---|
 | `argocd` | [ArgoCD](https://argoproj.github.io/cd/) Application deployment reports |
 | `kubeconform` | [Kubeconform](https://github.com/yannh/kubeconform) manifest validation reports |
+| `tenable-was` | [Tenable WAS](https://www.tenable.com/products/web-app-scanning) web application security scan reports |
 
 ## Installation
 
@@ -33,7 +34,7 @@ docker build -t devops-reporter .
 
 | Flag | Default | Description |
 |---|---|---|
-| `-source` | | **(required)** Report source: `argocd`, `kubeconform` |
+| `-source` | | **(required)** Report source: `argocd`, `kubeconform`, `tenable-was` |
 | `-o` | `report.html` | Output file path for the generated HTML report |
 | `-title` | *(source default)* | Title displayed in the report header |
 | `-template` | *(built-in)* | Path to a custom HTML template file |
@@ -67,11 +68,22 @@ kubeconform -output json ./manifests/ | devops-reporter -source kubeconform
 kubeconform -output json ./manifests/ | devops-reporter -source kubeconform -o validation-report.html
 ```
 
+### Tenable WAS
+
+```bash
+cat scan-report.json | devops-reporter -source tenable-was
+```
+
+```bash
+cat scan-report.json | devops-reporter -source tenable-was -o was-report.html -title "WAS Scan — Service A"
+```
+
 ### From a file
 
 ```bash
 cat tests/argocd/input.json | devops-reporter -source argocd -o report.html
 cat tests/kubeconform/input.json | devops-reporter -source kubeconform -o report.html
+cat tests/tenable-was/tenable-was-sample.json | devops-reporter -source tenable-was -o report.html
 ```
 
 ### In GitLab CI/CD

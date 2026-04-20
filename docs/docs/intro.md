@@ -21,6 +21,7 @@ sidebar_position: 1
 |---|---|---|
 | `argocd` | `argocd app get -o json` | ArgoCD Application deployment status reports |
 | `kubeconform` | `kubeconform -output json` | Kubernetes manifest validation reports |
+| `tenable-was` | Tenable WAS JSON export | Web application security scan reports |
 
 ## Quick Start
 
@@ -30,6 +31,9 @@ argocd app get my-app -o json | devops-reporter -source argocd -o report.html
 
 # Kubeconform validation report
 kubeconform -output json ./manifests/ | devops-reporter -source kubeconform -o report.html
+
+# Tenable WAS security scan report
+cat scan-report.json | devops-reporter -source tenable-was -o was-report.html
 ```
 
 ## Disclaimer

@@ -80,3 +80,39 @@ Templates use Go's [`html/template`](https://pkg.go.dev/html/template) syntax. T
 |---|---|
 | `statusLabel .Status` | Returns a human-readable label for a status string |
 | `statusClass .Status` | Returns a CSS class for a status string |
+
+### Tenable WAS template data
+
+| Field | Type | Description |
+|---|---|---|
+| `.Title` | string | Report title |
+| `.GeneratedAt` | string | UTC timestamp |
+| `.ScanTarget` | string | Target URL of the scan |
+| `.ScanID` | string | Tenable scan UUID |
+| `.ScanStatus` | string | Scan status (e.g. `completed`) |
+| `.ScanName` | string | Scan configuration name |
+| `.Template` | string | Scan template name (e.g. `basic`) |
+| `.StartedAt` | string | Scan start time (UTC) |
+| `.FinalizedAt` | string | Scan finish time (UTC) |
+| `.Duration` | string | Scan duration (e.g. `3m44s`) |
+| `.HasIssues` | bool | `true` when critical/high/medium findings > 0 |
+| `.Summary.Critical` | int | Critical finding count |
+| `.Summary.High` | int | High finding count |
+| `.Summary.Medium` | int | Medium finding count |
+| `.Summary.Low` | int | Low finding count |
+| `.Summary.Info` | int | Info finding count |
+| `.Summary.Total` | int | Total finding count |
+| `.Groups` | []WasSeverityGroup | Findings grouped by severity (critical → high → medium → low → info) |
+
+Each item in `.Groups` has:
+- `.Severity` — severity string (`critical`, `high`, `medium`, `low`, `info`)
+- `.Findings` — slice of findings for that severity
+
+Each finding has `.PluginID`, `.Name`, `.Family`, `.Synopsis`, `.Description`, `.Solution`, `.RiskFactor`, `.URI`, `.CVEs`, `.CWE`, `.OWASP`, `.Output`, `.Proof`, `.SeeAlso`.
+
+**Template functions (Tenable WAS):**
+
+| Function | Description |
+|---|---|
+| `wasRiskClass .Severity` | Returns a CSS class for a severity string (e.g. `risk-critical`) |
+| `wasRiskLabel .Severity` | Returns a human-readable label (e.g. `Critical`) |

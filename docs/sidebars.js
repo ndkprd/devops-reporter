@@ -9,7 +9,7 @@ const sidebars = {
       type: 'category',
       label: 'Sources',
       collapsed: false,
-      items: ['sources/argocd', 'sources/kubeconform'],
+      items: ['sources/argocd', 'sources/kubeconform', 'sources/tenable-was'],
     },
     'templates',
   ],
