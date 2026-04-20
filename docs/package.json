@@ -21,10 +21,10 @@
     "@docusaurus/types": "3.6.3"
   },
   "overrides": {
-    "webpack": "^5.98.0"
+    "webpack": "~5.105.0"
   },
   "resolutions": {
-    "webpack": "^5.98.0"
+    "webpack": "~5.105.0"
   },
   "engines": {
     "node": ">=18.0"
