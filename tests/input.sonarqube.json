@@ -1,0 +1,5733 @@
+{
+  "total": 338,
+  "paging": {
+    "pageIndex": 1,
+    "pageSize": 100,
+    "total": 338
+  },
+  "issues": [
+    {
+      "key": "92e9396e-dabc-4d21-8b37-01f3aaeaa6c6",
+      "rule": "javascript:S7781",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `String#replaceAll()` over `String#replace()`.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 23,
+      "effort": "5min",
+      "creationDate": "2026-03-03T06:51:41+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability",
+        "es2021"
+      ]
+    },
+    {
+      "key": "28e13b94-1b85-48db-8298-04dc1def0e9b",
+      "rule": "python:S5850",
+      "severity": "MAJOR",
+      "type": "BUG",
+      "status": "OPEN",
+      "message": "Group parts of the regex together to make the intended operator precedence explicit.",
+      "component": "kustomizer:tests/test_validation.py",
+      "line": 17,
+      "effort": "10min",
+      "creationDate": "2026-03-03T06:51:41+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "regex"
+      ]
+    },
+    {
+      "key": "9fe9b62d-6964-4efc-8eab-281f0991e951",
+      "rule": "javascript:S3776",
+      "severity": "CRITICAL",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 20 to the 15 allowed.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 60,
+      "effort": "10min",
+      "creationDate": "2026-01-15T06:07:38+0000",
+      "updateDate": "2026-01-15T06:07:38+0000",
+      "tags": [
+        "brain-overload",
+        "architecture"
+      ]
+    },
+    {
+      "key": "22259b70-b4e9-4542-9235-eff83ff61c31",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 116,
+      "effort": "5min",
+      "creationDate": "2026-01-15T06:07:38+0000",
+      "updateDate": "2026-01-15T06:07:38+0000",
+      "tags": []
+    },
+    {
+      "key": "4645070d-79ae-42ef-a882-1539413e9e27",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 337,
+      "effort": "5min",
+      "creationDate": "2026-01-15T06:07:38+0000",
+      "updateDate": "2026-01-15T06:07:38+0000",
+      "tags": []
+    },
+    {
+      "key": "19f71120-aa8d-4c04-948e-a283aa16ad60",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 5,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "36473d27-3811-4ac6-ad22-8bd949046c34",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 15,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "01e2e494-5b62-43b0-8d9d-b7c198a275d2",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 38,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "4eb541df-7d2c-4314-870b-415e71f1ee82",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 42,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "fe3d67ae-d7f6-4c76-bbde-340eebdc8bac",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 60,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "9551b11e-a416-4530-ab38-d5aabf3fa6d0",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 72,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "49d75b76-b9f1-4fe4-bb7f-b121c4362c50",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 112,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "4276b6fa-3de6-479c-80c2-113bfaa09e89",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 77,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "269d003c-a30c-4a22-8702-7b1d65c34fe6",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 113,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "0431eda9-d1cb-4836-941e-4da5da89f7fb",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 122,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "09afd6c9-7083-45fe-8d29-467b9e7fc8f1",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 129,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c78939d8-947c-416e-8279-a6d161c354cd",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 138,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ae7e54e4-7d29-486c-ba20-898cb32c32dc",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 307,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "2d818d69-3244-4d8d-87d0-06fc9f0505a4",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 310,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "39db5d15-b8fb-4c41-a50f-cbc378ca1009",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 315,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "98004789-8e0d-40bb-b337-600f502b16a7",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 318,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "994608f4-a286-480c-aa07-75b576aeae76",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 322,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "9cbd4635-1b91-48e6-b400-550b9d2692e4",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 330,
+      "effort": "2min",
+      "creationDate": "2026-01-15T06:04:12+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "bced0bb9-85f7-46b7-89f7-b186fdc35860",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 114,
+      "effort": "5min",
+      "creationDate": "2025-11-12T15:15:30+0000",
+      "updateDate": "2025-11-12T15:15:30+0000",
+      "tags": []
+    },
+    {
+      "key": "ec77bad7-990f-480e-b0ba-c6337bded014",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 144,
+      "effort": "5min",
+      "creationDate": "2025-11-12T15:15:30+0000",
+      "updateDate": "2025-11-12T15:15:30+0000",
+      "tags": []
+    },
+    {
+      "key": "34a4300e-d823-447d-bbca-a19dbb3dbabb",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 112,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "518e7750-d4db-4a81-90e8-38e7cacbfa5d",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 112,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "6e7c5067-3ab7-4ee9-87d8-2a9b1f6a4bc6",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 119,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "28c2175e-c5d5-402a-9966-3af571e5ac0a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 128,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "5b4a98c9-0b82-4397-983e-6ee7c2add899",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 192,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "5e3fbffa-575c-485b-b0ac-334a509c6f9e",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 192,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "34096937-917e-4d50-91d5-4b943cf8ba7c",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 193,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "609c3ccc-52e5-4e44-817d-3a51d5c08da8",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 195,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "9b66cdfa-210a-4492-8624-3b740c546251",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 426,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "4648654a-c2b9-43f5-97ff-b32b12a1a5f4",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 428,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "8dd2b902-7dea-434a-9617-ec2c1353aa1a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 439,
+      "effort": "2min",
+      "creationDate": "2025-11-12T15:13:40+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "2dee2aa9-a1d9-4e28-8214-155df3ecff10",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 219,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ed324f64-7e54-4de0-a6be-edad522f3d13",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 244,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "cfe56d8a-17d3-4731-8063-537e23ac76cf",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 248,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3cb7e262-e113-42db-ad29-34c769f2325f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 265,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "83a9e849-cb2e-43ef-81bc-9c2eb1f17a00",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 9,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "cb5c76a2-5f1d-47c0-83e5-a659b4b452c2",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 20,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "dc858f19-e174-48d4-b7bd-aba8d672289c",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 23,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "879de31a-167f-4a51-a589-9e6c1d5697b4",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 25,
+      "effort": "5min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2025-11-12T15:15:30+0000",
+      "tags": []
+    },
+    {
+      "key": "a5259015-7b9e-4318-8452-e906a56cf79a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 124,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c8f74ba2-f42e-4ba7-8e68-e603ac20b623",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 149,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "16a2941c-97a5-428b-ab4f-ab59a4c8dbfb",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 158,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "eccff827-3533-48fd-b1bd-8843fa3304ca",
+      "rule": "javascript:S7773",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `Number.parseInt` over `parseInt`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 177,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "convention",
+        "es2015"
+      ]
+    },
+    {
+      "key": "c827455d-7d18-47d5-90c1-b6eba7b10cfb",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 191,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a83ec419-0894-4914-81ac-c799a300f6cd",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 196,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "e58cde81-6281-4920-b817-8e6792dfeb98",
+      "rule": "javascript:S7773",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `Number.parseInt` over `parseInt`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 203,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "convention",
+        "es2015"
+      ]
+    },
+    {
+      "key": "6928b168-f19d-45c0-b185-995d1ac62e50",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 208,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "0fcefc1e-2bff-466f-abdc-7172ceefe964",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 214,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "7c44e7d3-930a-4739-aa1f-5d70b4ccea1c",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 225,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "5cf30d1c-cae2-4a6e-9d78-8b3e5ea49a07",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 230,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "5d3dd67f-e6f7-4218-947e-719fcfa70193",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 237,
+      "effort": "5min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2025-11-12T15:15:30+0000",
+      "tags": []
+    },
+    {
+      "key": "7e0b342a-4ab3-4f3c-aa94-1cd6bac0e907",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 244,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "e1b1dda3-4d30-49ba-aa97-05d5b69b20e9",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-projects-ui.js",
+      "line": 248,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "109f247d-5d1a-44f4-a429-b4706da5274d",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 5,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a29de285-b130-4e79-9792-b619d3724934",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 8,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "8c046441-8e5b-4f6e-b952-76cbdce9a496",
+      "rule": "javascript:S7761",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `.dataset` over `getAttribute(…)`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 70,
+      "effort": "5min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "dom",
+        "html",
+        "api"
+      ]
+    },
+    {
+      "key": "92f362ea-9f88-424e-8fac-094f4fc20b02",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 72,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "00f8f42d-f320-4733-a71a-b66b95432ce0",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 76,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "54426e21-6096-4e57-9010-16b5b100e2f4",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 88,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "86a36717-5ee0-487f-8eb3-719bcf03b1f2",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 143,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "b501319f-97d9-44f6-9bb3-3d5c77050983",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 146,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "76e99bf9-8eba-4643-883a-49def1725c79",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 151,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "562cd4ac-631a-4d5f-91f4-4e342278958d",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 153,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "6ae5ff17-7d24-47ca-aeba-1ff319a77d21",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 158,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "28440b32-fb27-4172-99ce-afb89a5ec4a0",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 114,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3a27aec9-4db5-428a-8eca-13f7775d6c03",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 114,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "8f1d878b-4527-4ca8-b0d8-e2270487cf05",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 115,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "5cf1168e-159e-40bb-a60a-6bf40f98a7ef",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 140,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "2453214a-3f0b-46ba-9272-1777c503a429",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 148,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "41574dc3-20cf-4d85-b293-441085fa8f68",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 149,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "d6bf86b9-e2f1-408e-bb7d-a378b945f88d",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 36,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a51aaf0e-834f-47b4-b755-47f5c67ab814",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 45,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c808f5bd-c3d3-450c-99af-145f5d11b01f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 56,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "82540a5c-0223-4c5d-86ae-e9ee9a3146d3",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 69,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "634bb5b0-aee4-4a1f-be77-0dfaad6eb804",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 78,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "18cddf56-a233-4209-acf6-73421224b700",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 90,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "4ce95e6f-a377-491b-92e9-3a1abc805145",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 92,
+      "effort": "2min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "9c47bcc0-9935-4ff6-a7aa-bd5ae22086ca",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 1443,
+      "effort": "5min",
+      "creationDate": "2025-11-12T14:43:55+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "cdb60be0-f854-4393-8271-f22dbc77e922",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 952,
+      "effort": "5min",
+      "creationDate": "2025-10-10T03:33:01+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "fa7bbd26-f536-44c0-b92c-df47013619f2",
+      "rule": "javascript:S7761",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `.dataset` over `setAttribute(…)`.",
+      "component": "kustomizer:src/index.html",
+      "line": 17,
+      "effort": "5min",
+      "creationDate": "2025-10-10T03:28:34+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "dom",
+        "html",
+        "api"
+      ]
+    },
+    {
+      "key": "8b49eb41-1fa2-48fc-97ab-25e6f4284889",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 323,
+      "effort": "5min",
+      "creationDate": "2025-10-10T03:28:34+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "d29920ae-538b-4fdf-98b0-85df5aeee771",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 625,
+      "effort": "5min",
+      "creationDate": "2025-10-10T03:28:34+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "9c033926-1d25-4be8-a345-f218fc45e609",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 2628,
+      "effort": "5min",
+      "creationDate": "2025-10-10T03:28:34+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "4fdedabd-07cf-4b7b-83c1-af344f15cc34",
+      "rule": "css:S4666",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Unexpected duplicate selector \"body\", first used at line 22",
+      "component": "kustomizer:src/styles.css",
+      "line": 671,
+      "effort": "1min",
+      "creationDate": "2025-10-09T09:04:10+0000",
+      "updateDate": "2025-10-09T09:04:10+0000",
+      "tags": []
+    },
+    {
+      "key": "4166e0b6-3cde-4deb-aa21-46d174b2e07c",
+      "rule": "css:S4666",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Unexpected duplicate selector \"textarea\", first used at line 1662",
+      "component": "kustomizer:src/styles.css",
+      "line": 1731,
+      "effort": "1min",
+      "creationDate": "2025-10-09T09:04:10+0000",
+      "updateDate": "2025-11-12T15:15:30+0000",
+      "tags": []
+    },
+    {
+      "key": "d66f930c-f0f7-400b-9372-9362f519e656",
+      "rule": "Web:S6853",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "A form label must be associated with a control.",
+      "component": "kustomizer:src/index.html",
+      "line": 256,
+      "effort": "5min",
+      "creationDate": "2025-10-09T07:11:37+0000",
+      "updateDate": "2025-10-09T07:11:37+0000",
+      "tags": [
+        "accessibility"
+      ]
+    },
+    {
+      "key": "8c156589-5252-4d79-9cfa-ee731fff9eda",
+      "rule": "Web:S6853",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "A form label must be associated with a control.",
+      "component": "kustomizer:src/index.html",
+      "line": 265,
+      "effort": "5min",
+      "creationDate": "2025-10-09T07:11:37+0000",
+      "updateDate": "2025-10-09T07:11:37+0000",
+      "tags": [
+        "accessibility"
+      ]
+    },
+    {
+      "key": "584865a0-f7e6-4bdd-b6e1-59b214cb9422",
+      "rule": "Web:S6853",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "A form label must be associated with a control.",
+      "component": "kustomizer:src/index.html",
+      "line": 270,
+      "effort": "5min",
+      "creationDate": "2025-10-09T07:11:37+0000",
+      "updateDate": "2025-10-09T07:11:37+0000",
+      "tags": [
+        "accessibility"
+      ]
+    },
+    {
+      "key": "fa46d0f5-7a55-4b1f-9e30-945fcc78b2a0",
+      "rule": "javascript:S7759",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `Date.now()` over `new Date()`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 31,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:46:06+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability",
+        "performance"
+      ]
+    },
+    {
+      "key": "8db6901d-1da1-46d3-aa9e-b5eddb450b94",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 34,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:46:06+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "d9d92e66-342c-44aa-9b23-1cd170bc6fca",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 223,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:46:06+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "2a766e87-5142-47f0-ac2b-0aeab0c61e02",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 225,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:46:06+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "f7c4c206-a79f-45b6-93b4-da85426abfbd",
+      "rule": "javascript:S7735",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Unexpected negated condition.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 231,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:46:06+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability"
+      ]
+    },
+    {
+      "key": "d33b8e93-8a0f-4928-bc6d-6fccd9f57442",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 260,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:46:06+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3dac319c-a2a6-46c8-8b2e-d54f20b84f2b",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 18,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c1ed0983-2398-4ac4-9f5b-92be989edacc",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 83,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "dfc2be1d-c48d-4031-a707-ec78503333b1",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 105,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "fbc7322b-434b-4ad6-85e0-c3e8ef4d49bd",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 130,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "b0f9486e-a7e7-4c60-bb6a-19d25d433fe6",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 136,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ca3e4f91-8ab7-441e-812b-2b922aa4651a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 64,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "616f1188-c0ea-4e9e-a508-2bccd5b74175",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 49,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "6a97f571-5a7f-41e6-b248-13cbe0577754",
+      "rule": "javascript:S1854",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove this useless assignment to variable \"inputContainer\".",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 52,
+      "effort": "1min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2025-10-09T07:11:37+0000",
+      "tags": [
+        "cwe",
+        "unused"
+      ]
+    },
+    {
+      "key": "73e71c21-078a-4ae0-a3cb-ae86a0f4311c",
+      "rule": "javascript:S1481",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove the declaration of the unused 'inputContainer' variable.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 52,
+      "effort": "5min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2025-10-09T07:11:37+0000",
+      "tags": [
+        "unused"
+      ]
+    },
+    {
+      "key": "6f915774-19be-46e6-ab19-b539c7ab7bdf",
+      "rule": "javascript:S1854",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove this useless assignment to variable \"dropdownContainer\".",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 53,
+      "effort": "1min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2025-10-09T07:11:37+0000",
+      "tags": [
+        "cwe",
+        "unused"
+      ]
+    },
+    {
+      "key": "ae54db53-f856-496c-82df-a6287b876f79",
+      "rule": "javascript:S1481",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove the declaration of the unused 'dropdownContainer' variable.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 53,
+      "effort": "5min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2025-10-09T07:11:37+0000",
+      "tags": [
+        "unused"
+      ]
+    },
+    {
+      "key": "9de4e514-015d-4266-959e-9c0703faa765",
+      "rule": "javascript:S7761",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `.dataset` over `getAttribute(…)`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 58,
+      "effort": "5min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "dom",
+        "html",
+        "api"
+      ]
+    },
+    {
+      "key": "518e0b10-d3c2-45aa-9a36-4ae72b6b9324",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 77,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "4f6d2033-5bec-46bc-850e-ac3ec1eac839",
+      "rule": "javascript:S7761",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `.dataset` over `getAttribute(…)`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 87,
+      "effort": "5min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "dom",
+        "html",
+        "api"
+      ]
+    },
+    {
+      "key": "d28e7cf1-a361-4d34-9497-da25d3029e79",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 161,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "e036874e-9a19-472d-81ba-e6d70f0b21e1",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 188,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "90175f86-78c1-498b-a83f-46857c321b32",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/project-name-manager.js",
+      "line": 345,
+      "effort": "2min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "1f53ae9b-ba2d-466d-a7f3-9916a1eaaa3d",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 936,
+      "effort": "5min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "d60f17a9-8279-4ab8-931b-371ee42de08c",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 962,
+      "effort": "5min",
+      "creationDate": "2025-10-09T06:26:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "1d402dd8-ac17-47f9-b279-c4e288f07eb0",
+      "rule": "python:S1481",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove the unused local variable \"required_vars\".",
+      "component": "kustomizer:tests/test_environment.py",
+      "line": 14,
+      "effort": "5min",
+      "creationDate": "2025-08-11T04:46:36+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "unused"
+      ]
+    },
+    {
+      "key": "591b0a26-ebc2-4dd0-944b-5da1957f0a48",
+      "rule": "python:S6353",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Use concise character class syntax '\\w' instead of '[a-zA-Z0-9_]'.",
+      "component": "kustomizer:tests/test_environment.py",
+      "line": 25,
+      "effort": "5min",
+      "creationDate": "2025-08-11T04:46:36+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "regex"
+      ]
+    },
+    {
+      "key": "66302e43-d2ff-4bfe-baa7-81216e46f451",
+      "rule": "python:S1481",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove the unused local variable \"found_instructions\".",
+      "component": "kustomizer:tests/test_environment.py",
+      "line": 114,
+      "effort": "5min",
+      "creationDate": "2025-08-11T04:46:36+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "unused"
+      ]
+    },
+    {
+      "key": "8085b1af-a383-4574-a2ed-17df35b7a166",
+      "rule": "python:S1481",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove the unused local variable \"has_version\".",
+      "component": "kustomizer:tests/test_environment.py",
+      "line": 133,
+      "effort": "5min",
+      "creationDate": "2025-08-11T04:46:36+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "unused"
+      ]
+    },
+    {
+      "key": "b4ee2c7b-f985-45b2-8a9e-0f0680737582",
+      "rule": "python:S1481",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove the unused local variable \"has_services\".",
+      "component": "kustomizer:tests/test_environment.py",
+      "line": 134,
+      "effort": "5min",
+      "creationDate": "2025-08-11T04:46:36+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "unused"
+      ]
+    },
+    {
+      "key": "13f851fc-d985-41d5-a53a-258d90a81be1",
+      "rule": "python:S3776",
+      "severity": "CRITICAL",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 38 to the 15 allowed.",
+      "component": "kustomizer:tests/test_environment.py",
+      "line": 147,
+      "effort": "28min",
+      "creationDate": "2025-08-11T04:46:36+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "brain-overload",
+        "architecture"
+      ]
+    },
+    {
+      "key": "d2e7f51f-4d68-4dd3-bdab-d1cf9179ed5e",
+      "rule": "python:S3776",
+      "severity": "CRITICAL",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 91 to the 15 allowed.",
+      "component": "kustomizer:tests/test_validation.py",
+      "line": 20,
+      "effort": "1h21min",
+      "creationDate": "2025-08-11T04:46:36+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "brain-overload",
+        "architecture"
+      ]
+    },
+    {
+      "key": "ef2a0a52-d505-453d-ae60-17d79339c6bc",
+      "rule": "javascript:S3776",
+      "severity": "CRITICAL",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 30 to the 15 allowed.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 252,
+      "effort": "20min",
+      "creationDate": "2025-08-11T04:10:50+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "brain-overload",
+        "architecture"
+      ]
+    },
+    {
+      "key": "02fcae9f-1192-48a2-ac27-ea237de987e0",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 300,
+      "effort": "5min",
+      "creationDate": "2025-08-11T04:10:50+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "145c016e-e662-46a2-bc52-2751b9b2c8df",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 118,
+      "effort": "5min",
+      "creationDate": "2025-08-11T03:39:31+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "6ebe5442-f556-4728-8775-e7b4a8334314",
+      "rule": "javascript:S7759",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `Date.now()` over `new Date()`.",
+      "component": "kustomizer:src/js/form-management.js",
+      "line": 82,
+      "effort": "2min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability",
+        "performance"
+      ]
+    },
+    {
+      "key": "507dcb92-f192-41fe-86b7-83b4669dcdda",
+      "rule": "javascript:S3800",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Refactor this function to always return the same type.",
+      "component": "kustomizer:src/js/form-management.js",
+      "line": 132,
+      "effort": "20min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "type-dependent",
+        "confusing"
+      ]
+    },
+    {
+      "key": "639147fc-2f59-4f13-96cc-12b2150f60e8",
+      "rule": "javascript:S7758",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `String#codePointAt()` over `String#charCodeAt()`.",
+      "component": "kustomizer:src/js/form-management.js",
+      "line": 136,
+      "effort": "5min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "internationalization",
+        "unicode"
+      ]
+    },
+    {
+      "key": "c5073cb3-5b66-44e8-b6a6-bf23eb026133",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 11,
+      "effort": "2min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "e70ddf98-0e9b-4f3e-9e79-393cbefe56a7",
+      "rule": "javascript:S3358",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 100,
+      "effort": "5min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "confusing"
+      ]
+    },
+    {
+      "key": "71d50be9-4506-4473-a83f-cc7f5643fe57",
+      "rule": "javascript:S3358",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 106,
+      "effort": "5min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "confusing"
+      ]
+    },
+    {
+      "key": "64595d3f-b488-4e1d-b214-1f73af1e26be",
+      "rule": "javascript:S3358",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 144,
+      "effort": "5min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "confusing"
+      ]
+    },
+    {
+      "key": "ef1d34d9-4edc-492c-82fe-c4e2e079e8da",
+      "rule": "javascript:S3358",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Extract this nested ternary operation into an independent statement.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 150,
+      "effort": "5min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "confusing"
+      ]
+    },
+    {
+      "key": "e10d1710-b8ed-4f29-8c8f-09a845216683",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 240,
+      "effort": "2min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "0539a6e5-2074-4e88-9b80-4da056b7e0e4",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 332,
+      "effort": "2min",
+      "creationDate": "2025-08-11T03:08:27+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c0a1355a-87c3-49bb-a320-61e5287e8feb",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 350,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:37:17+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "689b2f1b-33d7-4624-b66d-b572024b24e2",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 374,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:37:17+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "72e25e58-db38-4db8-b532-2fbb562cb6da",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 379,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:37:17+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "fb0c821d-c369-46c1-acfa-bb29cd4d03f5",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 412,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:37:17+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "90b60f68-4805-4203-a7ee-1931fbd4c467",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 450,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:37:17+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a0a0d7e4-4f2b-4eb4-88d1-3e12e660446d",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 15,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3c7a2c2f-9fb4-431b-8795-ac58f51f99e4",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 7,
+      "effort": "5min",
+      "creationDate": "2025-08-10T14:31:38+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "c5d46705-3761-49eb-a22b-36b70f06ee16",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 8,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "1e53fb4e-52b0-4d17-aa68-fb574d1ec236",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 31,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "05a5b248-4459-4313-9525-5c5f4631045d",
+      "rule": "javascript:S7761",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `.dataset` over `getAttribute(…)`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 66,
+      "effort": "5min",
+      "creationDate": "2025-08-10T14:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "dom",
+        "html",
+        "api"
+      ]
+    },
+    {
+      "key": "004f2347-a639-4666-9fe2-aae24c670dbe",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 95,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "98520be8-42c6-44dc-aca5-76258b552993",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/tab-manager.js",
+      "line": 99,
+      "effort": "2min",
+      "creationDate": "2025-08-10T14:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3a425723-acf1-4aa6-9c75-87935b9123f3",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 631,
+      "effort": "5min",
+      "creationDate": "2025-08-10T14:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "b8e31072-e3f6-4005-9db1-2b40891cd467",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 638,
+      "effort": "5min",
+      "creationDate": "2025-08-10T14:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "b5d43bd4-9040-4f9a-a190-3e93d5e8f0b3",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 12,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "118ea9df-e5ec-4fe0-8a69-e06c59701be9",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 11,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "6b86e417-578c-47ea-8ab2-dc9007b34232",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 28,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "199075a9-cf85-4668-aa21-b391166dfeb1",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 34,
+      "effort": "5min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "6d5ac1ef-4e46-4198-9eeb-18579756265c",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 34,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "9f145053-9430-40d2-985e-91880e5131e4",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 34,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "d633931a-8492-4229-aacd-ab9f85087302",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 35,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "81fb6a79-5b24-448e-9653-b97c1761a312",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 37,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "97212995-cb91-4e63-88dc-0bcd5e47d998",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 57,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "1db0bcaa-2882-40ef-82d5-d943069e6e18",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 79,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c37369bb-2b13-4059-a66e-caceba0a5e24",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/settings-manager.js",
+      "line": 83,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "14c77c6c-2e94-4372-b0f0-0c05cf3bd032",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 35,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "4f32a541-b207-4b7d-8557-f11e906405bd",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 35,
+      "effort": "5min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "ddcfba97-d277-432b-94d5-7ad17025a008",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 35,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "88994993-8583-4913-9585-4e2d3e509a73",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 36,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "4c19b4b7-5767-4cbc-8f64-473c17ecff7f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 48,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "787c490f-19e7-4561-9518-8cc3fadc5f75",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 48,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a7f4dbb2-947b-4af4-9584-6c8e303d5d7a",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 48,
+      "effort": "5min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "c558218c-f7a5-4585-9a77-3643066641aa",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 49,
+      "effort": "2min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ae9a9b13-ab82-4689-bf87-f3aa13326b70",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 485,
+      "effort": "5min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "77be51e4-a06d-49e7-9a21-92a2748ad4b4",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 508,
+      "effort": "5min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "6b3fe66b-e89a-4db6-b608-6ac77a0c74e8",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 545,
+      "effort": "5min",
+      "creationDate": "2025-08-10T13:28:04+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "4e27413f-a283-4a40-8366-1e66d955cfbd",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 262,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "59ee2fcd-436d-4f14-b7a3-020f2993474b",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 270,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "54cf3de2-2ece-4c76-b9af-855d4282e54c",
+      "rule": "javascript:S7773",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `Number.parseInt` over `parseInt`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 271,
+      "effort": "2min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "convention",
+        "es2015"
+      ]
+    },
+    {
+      "key": "95ec747f-5321-4466-8781-015602e21696",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 315,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "3dc3dcfd-e862-4d7e-9208-ee49c37a1620",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 319,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "9549315b-ab45-4bc4-ade7-30e0b83ad1a8",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 89,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "121ee614-1095-4139-a687-a3a14e94da71",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 112,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "8e8b97e4-1b88-498e-9bdc-48563bfa31a0",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 130,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "407f6423-fbb6-497c-acb3-083e7c8145dc",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 147,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "210e48ac-77c9-4384-a3bc-d50f6b30572e",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 154,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "db8c634e-6b90-4097-8437-9c33f1f54412",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 241,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "066e4fda-92e9-4ea7-aca5-54b796faec78",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 264,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "44041ed9-9480-4055-a2ac-ae5fd5e48df4",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 275,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "7d08113b-fb25-42b7-acb1-5fb819b7680c",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 292,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "db7ca89d-4698-4d59-9d99-414c0ba93d4b",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 299,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "f545e9ea-73be-4aaa-bda4-b7a7e9783927",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 2183,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "39dc3e7b-cbae-415e-832c-2b8cc0779dd5",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 2462,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "e91e8c21-1073-4740-a65b-51a1327f9506",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 2499,
+      "effort": "5min",
+      "creationDate": "2025-08-10T12:39:48+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "6cc62941-5e99-4538-8656-075be03d1fc6",
+      "rule": "python:S3457",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Add argument(s) corresponding to the message's replacement field(s).",
+      "component": "kustomizer:hack/compile.py",
+      "line": 269,
+      "effort": "1min",
+      "creationDate": "2025-08-10T05:41:15+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "confusing"
+      ]
+    },
+    {
+      "key": "d2ab8bac-de29-41e0-9c44-3caa60ceb428",
+      "rule": "python:S3457",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Add argument(s) corresponding to the message's replacement field(s).",
+      "component": "kustomizer:hack/compile.py",
+      "line": 317,
+      "effort": "1min",
+      "creationDate": "2025-08-10T05:41:15+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "confusing"
+      ]
+    },
+    {
+      "key": "8fc938cc-eccd-4cbd-9ed9-87eb0a1d4105",
+      "rule": "javascript:S6594",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Use the \"RegExp.exec()\" method instead.",
+      "component": "kustomizer:src/js/docker-parser.js",
+      "line": 73,
+      "effort": "5min",
+      "creationDate": "2025-08-09T17:02:59+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "regex",
+        "type-dependent"
+      ]
+    },
+    {
+      "key": "f968a4f1-f357-4914-b642-22bee72175c0",
+      "rule": "javascript:S6594",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Use the \"RegExp.exec()\" method instead.",
+      "component": "kustomizer:src/js/docker-parser.js",
+      "line": 73,
+      "effort": "5min",
+      "creationDate": "2025-08-09T17:02:59+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "regex",
+        "type-dependent"
+      ]
+    },
+    {
+      "key": "b68ec6dd-5357-4a1e-8d56-ff7b53582ccb",
+      "rule": "javascript:S7773",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `Number.parseInt` over `parseInt`.",
+      "component": "kustomizer:src/js/docker-parser.js",
+      "line": 75,
+      "effort": "2min",
+      "creationDate": "2025-08-09T17:02:59+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "convention",
+        "es2015"
+      ]
+    },
+    {
+      "key": "148f6c38-d2c8-47dd-9d45-ea032eef2ef4",
+      "rule": "javascript:S7773",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `Number.parseInt` over `parseInt`.",
+      "component": "kustomizer:src/js/docker-parser.js",
+      "line": 86,
+      "effort": "2min",
+      "creationDate": "2025-08-09T17:02:59+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "convention",
+        "es2015"
+      ]
+    },
+    {
+      "key": "44f79767-8d24-4bfd-9a27-7825441bdce0",
+      "rule": "javascript:S3776",
+      "severity": "CRITICAL",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 31 to the 15 allowed.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 73,
+      "effort": "21min",
+      "creationDate": "2025-08-09T17:02:59+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "brain-overload",
+        "architecture"
+      ]
+    },
+    {
+      "key": "5b33a3cd-43b4-47af-8bf3-a7c86522d8f3",
+      "rule": "javascript:S7735",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Unexpected negated condition.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 92,
+      "effort": "2min",
+      "creationDate": "2025-08-09T17:02:59+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability"
+      ]
+    },
+    {
+      "key": "62608c87-3ef7-4f23-a374-7c6480b1d5a8",
+      "rule": "python:S3776",
+      "severity": "CRITICAL",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 16 to the 15 allowed.",
+      "component": "kustomizer:tests/test_parser.py",
+      "line": 11,
+      "effort": "6min",
+      "creationDate": "2025-08-09T17:02:59+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "brain-overload",
+        "architecture"
+      ]
+    },
+    {
+      "key": "eb64a295-8746-450d-81d6-20752f1507f7",
+      "rule": "python:S3776",
+      "severity": "CRITICAL",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Refactor this function to reduce its Cognitive Complexity from 17 to the 15 allowed.",
+      "component": "kustomizer:tests/test_parser.py",
+      "line": 69,
+      "effort": "7min",
+      "creationDate": "2025-08-09T17:02:59+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "brain-overload",
+        "architecture"
+      ]
+    },
+    {
+      "key": "928c72bb-84f3-46e3-a2a9-fd3022994c12",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 392,
+      "effort": "2min",
+      "creationDate": "2025-08-09T14:55:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "f2115d2d-7a4b-4a8b-8327-cce2676f94c5",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 402,
+      "effort": "2min",
+      "creationDate": "2025-08-09T14:55:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "2e688f0f-a69a-4ce3-bc39-41fc78b78b23",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 292,
+      "effort": "5min",
+      "creationDate": "2025-08-09T14:11:53+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "95bb8cb7-748e-45a5-8004-1efe7199dc34",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 342,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "75a2a14c-dc2b-4f7e-9572-932a78cc4e7a",
+      "rule": "javascript:S7735",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Unexpected negated condition.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 155,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:31:38+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability"
+      ]
+    },
+    {
+      "key": "29ef8b5b-92d9-44a9-a191-9953be7e930f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 178,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a6bd3571-a8d7-4e78-b241-c905c3570c67",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 179,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "84bd61d2-ba05-4af4-bdf0-d5d0a22fa2e2",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 245,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ceed2603-189e-4cc2-a9e2-bd6b52d92c37",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 251,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "dec3a437-5ac0-4ed4-adac-1db55e4eef78",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 329,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "32fb174c-3d67-4b36-a152-8b31f292439b",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 336,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "d876c1e6-bc6c-4ea8-84dd-d7ee541c3aad",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 339,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ef3d5b41-e6b3-4bdd-b210-b4de43716bcd",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 394,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "e1b57423-49b3-4d65-b37e-3dabd719c09c",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 396,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "8e864988-baf5-467f-8195-12da2d56dd03",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 397,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "b7890cfa-1803-4800-9e18-2696eacf7499",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 400,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "474fcf98-0c09-43aa-813b-c1903b6742a9",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 401,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "9989b641-fec7-4555-b8a2-c415c5040b72",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 406,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "77d6811d-5e6e-4582-b8dc-54008fdb6bf0",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 407,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "05469e5b-fe08-4a2b-93f3-d76db84d159a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 408,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "1de826b5-7203-457e-aec0-7cf4c01c637f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 411,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "5128090c-08de-4541-b2a8-2ef49916082d",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 691,
+      "effort": "2min",
+      "creationDate": "2025-08-09T13:12:53+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "b8e9334c-440a-4b0d-9edd-de2c8e1aa2ff",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 5,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "95439e2f-dda1-40b4-9fa7-badbb6c726ff",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 8,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "76dc7f4d-4fbd-4667-8aa0-5996edb8295b",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 9,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c557ce18-e254-4150-b635-465c9a63baf1",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 23,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "bd5a22b2-69ea-4257-8dbf-364a8f0aecc6",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 26,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "0514d766-32e2-45d7-a7ad-03286953427f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 30,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "59d068a0-c92d-46e8-a9b0-6c8db34ac7ab",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 31,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "33d61345-3e45-47b7-bbdb-1a85fb2098cf",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 35,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "eb72c2bb-47a6-4a95-be4c-ae23035f409c",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 35,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "40ecb5e8-e5ea-4467-b915-b821f5656097",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 36,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "9f321aaa-08e3-43ed-8e97-3477c642aa9d",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 36,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3d06d675-e3ad-4c44-8ff5-8ba34596c76b",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 37,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ba85a568-a6eb-42c0-8211-bc4c2adb8f53",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 37,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a91fbe16-7dd6-45f1-82c6-3cf825e15a22",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 38,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "d516be9a-a430-4835-99ff-f7dec81f2b31",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/app-init.js",
+      "line": 38,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "1eb3e840-2e06-4c76-ac81-954aded1af90",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 5,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3dddd04d-622c-4e6e-80c7-7a03dff652d8",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 12,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "4f25ad50-5c06-4856-bb66-03ab5adaeb31",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 17,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a1ed82a2-9fe4-48df-ba78-2a8b7bf0ccc9",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 22,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a64383ab-282f-4688-b9ca-5067ca8505f3",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 50,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "7e14af7c-bd62-41b9-ac70-7d1418140049",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 53,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "112b4d80-2ec7-4a64-9673-c67fdd26869f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 56,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "2f35889f-f52b-465b-936a-f22ab8b9f1d7",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 62,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "7df3cda5-8ebf-4708-ab89-9b438e0567c0",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 65,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "efa94759-17c9-41e1-956c-08abef2cace9",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 97,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "d3b7f01d-1d22-44ad-9bd4-fc45870f47ef",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 102,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "e84c26be-f467-47f3-a50d-466ae2daf209",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 105,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "87057f82-01bf-474c-a4ce-796d379df6ee",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 106,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3394cc38-bce3-453a-bb6a-128752a5979e",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 109,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a43cb1ea-19c5-43a8-84ae-3ec1ca5e1d82",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 137,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "89804cfa-2d70-4ea3-93c0-8eb51c4368b0",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 148,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "26fc1d24-605a-460d-aea7-246d9893250d",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 150,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3c15e13d-20ea-4d75-87e6-474558d0426f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 151,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "d732038d-b082-48c3-b552-fa58064d7e21",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 156,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "eaa20cbf-b42b-4cd4-8838-f85001eff60b",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 156,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "9bbf62a6-e71a-400b-a0c0-324d00203fd0",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 160,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ec1c6713-cf8e-4cc0-8349-4ce79647c8e7",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 170,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "1aa9468f-658d-420c-933a-13d0f68c5942",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 175,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "35197814-09a0-4ef6-b234-a8016e919190",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 200,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c35d86c7-7b2e-458f-aa47-e13a0253c814",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 200,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "36e3ee6e-6789-4fb6-ae7d-3bf373b74934",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 203,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "b329600e-0575-4833-930b-3c7588c752ab",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 204,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "d19960d4-0680-40b1-9052-b2c87fae145d",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 205,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "605f744f-7394-4ea1-9cd1-13c7e5105a25",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 207,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "463d170c-55a0-4213-b3f5-77769b302c1b",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 214,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "b90d5f32-0ba8-43ca-b339-6fa1793ca0ea",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/awx-client.js",
+      "line": 219,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "09876f37-6794-422f-bbd1-2f75291f2894",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/docker-parser.js",
+      "line": 17,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "cc4e5026-175c-46aa-b16c-d4c24f8c7763",
+      "rule": "javascript:S6594",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Use the \"RegExp.exec()\" method instead.",
+      "component": "kustomizer:src/js/docker-parser.js",
+      "line": 135,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "regex",
+        "type-dependent"
+      ]
+    },
+    {
+      "key": "052dbe27-0f1a-4948-be1a-dd73a613a42b",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/docker-parser.js",
+      "line": 152,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "48bbe85b-1905-49b3-9bce-3776d24b4bc8",
+      "rule": "javascript:S7759",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `Date.now()` over `new Date()`.",
+      "component": "kustomizer:src/js/form-management.js",
+      "line": 151,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability",
+        "performance"
+      ]
+    },
+    {
+      "key": "897a3676-ef5a-4a0d-bc52-42f351aab69e",
+      "rule": "javascript:S7762",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `childNode.remove()` over `parentNode.removeChild(childNode)`.",
+      "component": "kustomizer:src/js/form-management.js",
+      "line": 259,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "dom",
+        "modernize",
+        "javascript"
+      ]
+    },
+    {
+      "key": "924fa396-89b3-4a7d-8321-24eafc56ba31",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/form-management.js",
+      "line": 323,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": []
+    },
+    {
+      "key": "4dd084cc-9165-4f45-a0cd-8fa13ac63d66",
+      "rule": "javascript:S2486",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Handle this exception or don't catch it at all.",
+      "component": "kustomizer:src/js/form-management.js",
+      "line": 378,
+      "effort": "1h",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "cwe",
+        "error-handling",
+        "suspicious"
+      ]
+    },
+    {
+      "key": "0d755cec-0738-4b92-a824-d1dff08e07ff",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/form-management.js",
+      "line": 391,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "e80dfdb6-d099-48f0-af7d-b292b96c1c0a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 152,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "3207626e-2c0f-4a5a-98dd-17c9be629469",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 159,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "49eb4468-3370-4568-b367-67efc59a670d",
+      "rule": "javascript:S1854",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove this useless assignment to variable \"baseUrl\".",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 168,
+      "effort": "1min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "cwe",
+        "unused"
+      ]
+    },
+    {
+      "key": "7d33b85e-6f44-4823-bd24-0f7396db06ff",
+      "rule": "javascript:S1481",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove the declaration of the unused 'baseUrl' variable.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 168,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "unused"
+      ]
+    },
+    {
+      "key": "87aecec2-0008-4833-8dcd-ad21700595f1",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 197,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "889d713c-a658-4416-ae55-de52cf0652e3",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/gitlab-client.js",
+      "line": 292,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "6c974193-5a30-4c0d-8392-1c47352c6665",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 61,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "906d24d7-d363-4159-8265-6e89e469ec69",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 94,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "deb82121-98f9-4609-aa89-df072eca3999",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 98,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "dfb9ec19-2b84-425b-9c63-f59ccdb4295c",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 100,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "cc80aeae-9cf6-43d9-9db3-0f447376782d",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 106,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": []
+    },
+    {
+      "key": "26fa5231-d48c-4de9-9466-ce0c5a6cc60c",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 107,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a6b63a68-9e04-4549-8452-a186c0b53602",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 137,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "7ca757c7-1066-4dea-8b4a-0acc5a0fa84a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 139,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c927d5b7-e012-4346-a08a-05e7e65b2c1a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 171,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "15fb1928-0835-4703-9f8f-2ee43836fc7f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/kustomize-generator.js",
+      "line": 183,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "6afd7e26-3226-4291-b55e-5a3440adf4a8",
+      "rule": "javascript:S1854",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove this useless assignment to variable \"lastUpdateTime\".",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 58,
+      "effort": "1min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "cwe",
+        "unused"
+      ]
+    },
+    {
+      "key": "eda0b3ac-d78d-47ad-b300-8647403d4e8c",
+      "rule": "javascript:S1481",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove the declaration of the unused 'lastUpdateTime' variable.",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 58,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "unused"
+      ]
+    },
+    {
+      "key": "b5dac027-28b5-4e91-b04b-ef89d2b65cc3",
+      "rule": "javascript:S1854",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove this useless assignment to variable \"animationId\".",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 84,
+      "effort": "1min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "cwe",
+        "unused"
+      ]
+    },
+    {
+      "key": "dff4fa9c-bd64-40a7-88a3-20f13bc1db61",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 90,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "122ebc5e-6450-4add-9a07-a558296b4e2f",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 91,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "298632d6-2495-4045-9eac-a633ebcd84ea",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 92,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "cd2c13c2-3677-4831-a9a1-ca2d1c7b581e",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 172,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "304e8b71-36d0-485f-9254-22b7ed0b8774",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 173,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ed320253-3234-4976-bad1-8f79e1d8145a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 174,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "1ddcef0a-3eb6-4e3a-9160-270be7784212",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/loading-animations.js",
+      "line": 180,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "44196cec-f558-421a-9e76-31f87bc907eb",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 524,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c23bf59b-7e7b-47a4-b60a-2e8c24a39aca",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 535,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a5eb674c-68c8-452a-a1f6-218c0af82b28",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 538,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "b5336154-70f1-4e27-a84d-b90d5b6a5685",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 539,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "cf46bd5e-d1e0-4877-b449-6ca1590cc1a2",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 540,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "1878a58e-da3b-49b3-a765-abd77ca12efd",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 555,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "a44195a9-5629-4ef7-8166-a0500e6df139",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 558,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "6e105b3b-1cbb-4280-924b-9a8ac0caf205",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 559,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "bac0725c-1fed-42dc-bd69-34a3d23567f6",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 681,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "1816faa1-b90b-413a-bdb2-16f292b7eec8",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 684,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "43d4b25a-e79e-4f9f-95ab-d5e081bba251",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 685,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "56fb1d6a-6286-4f27-a885-9004bbb30376",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 686,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "0c88c141-dfe7-40ea-a595-c4ae1120d58a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 690,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "4f216793-1da0-48d8-b182-34a3a772d44a",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 694,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "324bba63-093f-418a-a6c6-da9d00776894",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 695,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ab160ecf-3aec-48c8-8524-a47f25cfa719",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 701,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "9efbca1d-acd4-4c46-a304-4f5c684ac45c",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 703,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "331641c1-f0e9-4988-bbe1-43f09802c3f4",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 704,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "afe5f890-b7d5-4bc8-a6c0-b93628007c3c",
+      "rule": "javascript:S6582",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer using an optional chain expression instead, as it's more concise and easier to read.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 718,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": []
+    },
+    {
+      "key": "cd69ab91-89ad-45d6-8301-13f9e9905e06",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/modal-manager.js",
+      "line": 745,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "8a47d851-e590-415e-a6b1-b9383f1a43f8",
+      "rule": "javascript:S7761",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `.dataset` over `getAttribute(…)`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 12,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "dom",
+        "html",
+        "api"
+      ]
+    },
+    {
+      "key": "f535f3b7-9004-4d14-9f21-a0982dc16f02",
+      "rule": "javascript:S7761",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `.dataset` over `setAttribute(…)`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 44,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "dom",
+        "html",
+        "api"
+      ]
+    },
+    {
+      "key": "3b45a8f9-06eb-4942-807a-f3c411226992",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 72,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "89537110-d23a-4f97-972c-31bbcf3d3efc",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/theme-manager.js",
+      "line": 82,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "c1fd9855-116b-4a38-a22f-695a46250bf9",
+      "rule": "javascript:S7781",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `String#replaceAll()` over `String#replace()`.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 21,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability",
+        "es2021"
+      ]
+    },
+    {
+      "key": "b97b1adb-5263-431c-b9d4-fc24494dad8e",
+      "rule": "javascript:S7781",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `String#replaceAll()` over `String#replace()`.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 22,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability",
+        "es2021"
+      ]
+    },
+    {
+      "key": "65214db7-ac4a-40e1-9386-91d3528093a6",
+      "rule": "javascript:S7780",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "`String.raw` should be used to avoid escaping `\\`.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 30,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability"
+      ]
+    },
+    {
+      "key": "7fc4829f-cea5-4385-82bc-544069fd69c5",
+      "rule": "javascript:S7781",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `String#replaceAll()` over `String#replace()`.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 30,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability",
+        "es2021"
+      ]
+    },
+    {
+      "key": "528e38d0-6800-46f7-ad4a-bfdd17a272f6",
+      "rule": "javascript:S7780",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "`String.raw` should be used to avoid escaping `\\`.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 31,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability"
+      ]
+    },
+    {
+      "key": "6b9ccfd2-ab21-4dff-8af5-d0719347895e",
+      "rule": "javascript:S7781",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `String#replaceAll()` over `String#replace()`.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 31,
+      "effort": "5min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "readability",
+        "es2021"
+      ]
+    },
+    {
+      "key": "346a8f35-f3ff-4817-8cf3-1f49868d0596",
+      "rule": "javascript:S7764",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Prefer `globalThis` over `window`.",
+      "component": "kustomizer:src/js/utils.js",
+      "line": 173,
+      "effort": "2min",
+      "creationDate": "2025-08-08T07:59:33+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "portability",
+        "es2020"
+      ]
+    },
+    {
+      "key": "ae365bbf-24e7-4ccb-8590-f224c79d50b9",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 788,
+      "effort": "5min",
+      "creationDate": "2025-08-03T13:57:14+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "3582465e-ccdf-49d7-8ea4-80f0ddaf4158",
+      "rule": "css:S7924",
+      "severity": "MAJOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Text does not meet the minimal contrast requirement with its background.",
+      "component": "kustomizer:src/styles.css",
+      "line": 1971,
+      "effort": "5min",
+      "creationDate": "2025-08-03T13:57:14+0000",
+      "updateDate": "2026-03-19T10:49:25+0000",
+      "tags": [
+        "css",
+        "accessibility",
+        "wcag",
+        "contrast"
+      ]
+    },
+    {
+      "key": "63a434c3-ceb2-4914-8baf-c2775e717ed3",
+      "rule": "python:S1481",
+      "severity": "MINOR",
+      "type": "CODE_SMELL",
+      "status": "OPEN",
+      "message": "Remove the unused local variable \"e\".",
+      "component": "kustomizer:tests/test_parser.py",
+      "line": 18,
+      "effort": "5min",
+      "creationDate": "2025-08-03T13:57:14+0000",
+      "updateDate": "2025-10-03T09:40:57+0000",
+      "tags": [
+        "unused"
+      ]
+    }
+  ]
+}

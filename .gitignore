@@ -17,3 +17,6 @@ build/
 .docusaurus/
 .cache-loader/
 bun.lockb
+
+# IDEs
+.claude/

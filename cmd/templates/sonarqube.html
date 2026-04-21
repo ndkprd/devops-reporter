@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }}</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:        #1a1916;
+      --ink-muted:  #5a5753;
+      --paper:      #faf9f6;
+      --rule:       #d4cfc8;
+      --rule-heavy: #9a9490;
+
+      --blocker-bg: #fce8e8; --blocker-fg: #8b0000; --blocker-bd: #dc2222;
+      --critical-bg: #fdf4e8; --critical-fg: #7a3b00; --critical-bd: #d4760a;
+      --major-bg:    #fff8e8; --major-fg:    #6b5200; --major-bd:    #c99700;
+      --minor-bg:    #f0f7f2; --minor-fg:    #1b5e38; --minor-bd:    #2e7d52;
+      --info-bg:     #f0f0f0; --info-fg:     #444;    --info-bd:     #888;
+
+      --accent:  #1a3a5c;
+      --accent2: #5c1a1a;
+    }
+
+    html { font-size: 13px; background: #e8e5e0; }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', Times, serif;
+      color: var(--ink);
+      background: var(--paper);
+      max-width: 980px;
+      margin: 2rem auto;
+      box-shadow: 0 2px 24px rgba(0,0,0,0.18);
+    }
+
+    /* ── Header ── */
+    .report-header {
+      padding: 2.8rem 3rem 2rem;
+      border-top: 6px solid var(--accent);
+      border-bottom: 2px solid var(--rule-heavy);
+      position: relative;
+    }
+    .report-header.header-issues { border-top-color: var(--blocker-bd); }
+    .report-header.header-clean  { border-top-color: #2e7d52; }
+
+    .header-stamp {
+      position: absolute; top: 2.2rem; right: 3rem; text-align: right;
+    }
+    .header-stamp .stamp-label {
+      font-family: 'Courier New', monospace; font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ink-muted); display: block; margin-bottom: 0.15rem;
+    }
+    .header-stamp .stamp-value {
+      font-family: 'Courier New', monospace; font-size: 0.78rem; color: var(--ink);
+    }
+
+    .report-eyebrow {
+      font-family: 'Courier New', monospace; font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.2em; color: var(--ink-muted); margin-bottom: 0.5rem;
+    }
+    .report-title { font-size: 1.9rem; font-weight: normal; letter-spacing: -0.01em; line-height: 1.2; }
+    .report-subtitle { font-family: 'Courier New', monospace; font-size: 0.78rem; color: var(--ink-muted); margin-top: 0.5rem; }
+
+    /* ── Meta ── */
+    .scan-meta {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 0; border-bottom: 2px solid var(--rule);
+    }
+    .meta-item {
+      padding: 0.9rem 1.5rem; border-right: 1px solid var(--rule);
+    }
+    .meta-item:last-child { border-right: none; }
+    .meta-label {
+      font-family: 'Courier New', monospace; font-size: 0.65rem;
+      text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-muted); display: block; margin-bottom: 0.25rem;
+    }
+    .meta-value { font-family: 'Courier New', monospace; font-size: 0.8rem; word-break: break-all; }
+
+    /* ── Status Banner ── */
+    .status-banner {
+      padding: 0.6rem 3rem; font-family: 'Courier New', monospace;
+      font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+    }
+    .status-banner::before { content: '▶  '; }
+    .status-banner.issues { background: var(--blocker-bg); color: var(--blocker-fg); border-bottom: 1px solid var(--blocker-bd); }
+    .status-banner.clean  { background: var(--minor-bg); color: var(--minor-fg); border-bottom: 1px solid var(--minor-bd); }
+
+    /* ── Summary Grid ── */
+    .summary-section { padding: 2rem 3rem; border-bottom: 2px solid var(--rule); }
+    .summary-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr);
+      gap: 1px; background: var(--rule); border: 1px solid var(--rule);
+    }
+    .stat-card { background: var(--paper); padding: 1.4rem 0.6rem; text-align: center; }
+    .stat-card .stat-number {
+      font-family: 'Georgia', serif; font-size: 2.2rem; font-weight: bold; line-height: 1; display: block; margin-bottom: 0.4rem;
+    }
+    .stat-card .stat-label {
+      font-family: 'Courier New', monospace; font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-muted);
+    }
+    .stat-card.stat-blocker .stat-number { color: var(--blocker-fg); }
+    .stat-card.stat-critical .stat-number { color: var(--critical-fg); }
+    .stat-card.stat-major .stat-number { color: var(--major-fg); }
+    .stat-card.stat-minor .stat-number { color: var(--minor-fg); }
+    .stat-card.stat-info .stat-number { color: var(--info-fg); }
+    .stat-card.stat-primary .stat-number { color: var(--accent); }
+
+    /* ── Severity Badge ── */
+    .sev-badge {
+      display: inline-block; font-family: 'Courier New', monospace; font-size: 0.62rem;
+      font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em;
+      padding: 0.15rem 0.45rem; border-radius: 2px; vertical-align: middle;
+    }
+    .sev-blocker  { background: var(--blocker-bg); color: var(--blocker-fg); border: 1px solid var(--blocker-bd); }
+    .sev-critical { background: var(--critical-bg); color: var(--critical-fg); border: 1px solid var(--critical-bd); }
+    .sev-major    { background: var(--major-bg); color: var(--major-fg); border: 1px solid var(--major-bd); }
+    .sev-minor    { background: var(--minor-bg); color: var(--minor-fg); border: 1px solid var(--minor-bd); }
+    .sev-info     { background: var(--info-bg); color: var(--info-fg); border: 1px solid var(--info-bd); }
+
+    .type-badge {
+      display: inline-block; font-family: 'Courier New', monospace; font-size: 0.6rem;
+      text-transform: uppercase; letter-spacing: 0.04em;
+      padding: 0.1rem 0.35rem; border: 1px solid var(--rule-heavy);
+      border-radius: 2px; background: #f0ede8; color: var(--ink-muted);
+      vertical-align: middle;
+    }
+
+    /* ── Issues Table ── */
+    .issues-section { padding: 1.6rem 3rem 2rem; }
+
+    .sev-group { margin-bottom: 2rem; }
+
+    .sev-heading {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding-bottom: 0.4rem; border-bottom: 2px solid var(--rule-heavy); margin-bottom: 0.6rem;
+    }
+    .sev-name {
+      font-family: 'Georgia', serif; font-size: 1.05rem; font-weight: bold;
+    }
+    .sev-name.sev-blocker { color: var(--blocker-fg); }
+    .sev-name.sev-critical { color: var(--critical-fg); }
+    .sev-name.sev-major { color: var(--major-fg); }
+    .sev-name.sev-minor { color: var(--minor-fg); }
+    .sev-name.sev-info { color: var(--info-fg); }
+    .sev-count { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--ink-muted); }
+
+    .issues-table {
+      width: 100%; border-collapse: collapse; font-size: 0.78rem;
+      border: 1px solid var(--rule);
+    }
+    .issues-table th {
+      font-family: 'Courier New', monospace; font-size: 0.62rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--ink-muted); padding: 0.55rem 0.75rem; text-align: left;
+      border-bottom: 2px solid var(--rule-heavy); background: #f4f3f0;
+    }
+    .issues-table td {
+      padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule);
+      vertical-align: top;
+    }
+    .issues-table tr:last-child td { border-bottom: none; }
+    .issues-table tr:hover td { background: #f7f6f3; }
+
+    .td-rule  { font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--ink-muted); white-space: nowrap; }
+    .td-file  { font-size: 0.8rem; font-weight: 500; color: var(--accent); max-width: 14rem; word-break: break-all; }
+    .td-line  { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--ink-muted); white-space: nowrap; }
+    .td-msg   { font-size: 0.75rem; color: var(--ink); line-height: 1.4; }
+    .td-tags  { font-size: 0.65rem; color: var(--ink-muted); }
+
+    .tag { display: inline-block; padding: 0.05rem 0.3rem; background: #f0ede8; border-radius: 2px; margin: 0.1rem; }
+
+    /* ── Footer ── */
+    .report-footer {
+      padding: 1rem 3rem; border-top: 2px solid var(--rule);
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .footer-total { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--ink-muted); }
+    .footer-brand { font-family: 'Courier New', monospace; font-size: 0.68rem; color: var(--rule-heavy); letter-spacing: 0.08em; }
+
+    @media print {
+      html { font-size: 11px; background: white; }
+      body { max-width: none; margin: 0; box-shadow: none; background: white; }
+      .sev-group { page-break-inside: avoid; }
+      .sev-heading { page-break-after: avoid; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="report-header {{ if .HasIssues }}header-issues{{ else }}header-clean{{ end }}">
+    <div class="header-stamp">
+      <span class="stamp-label">Generated</span>
+      <span class="stamp-value">{{ .GeneratedAt }}</span>
+    </div>
+    <p class="report-eyebrow">Static Code Analysis</p>
+    <h1 class="report-title">{{ .Title }}</h1>
+    <p class="report-subtitle">Project: {{ .ProjectKey }} &nbsp;·&nbsp; {{ .TotalIssues }} issues</p>
+  </header>
+
+  <!-- Meta -->
+  <div class="scan-meta">
+    <div class="meta-item">
+      <span class="meta-label">Total Issues</span>
+      <span class="meta-value">{{ .TotalIssues }}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Blocker</span>
+      <span class="meta-value">{{ .Summary.BySeverity.Blocker }}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Critical</span>
+      <span class="meta-value">{{ .Summary.BySeverity.Critical }}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Major</span>
+      <span class="meta-value">{{ .Summary.BySeverity.Major }}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Minor</span>
+      <span class="meta-value">{{ .Summary.BySeverity.Minor }}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Info</span>
+      <span class="meta-value">{{ .Summary.BySeverity.Info }}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Bugs</span>
+      <span class="meta-value">{{ .Summary.ByType.Bug }}</span>
+    </div>
+    <div class="meta-item">
+      <span class="meta-label">Code Smells</span>
+      <span class="meta-value">{{ .Summary.ByType.CodeSmell }}</span>
+    </div>
+  </div>
+
+  <!-- Status Banner -->
+  {{ if .HasIssues }}
+  <div class="status-banner issues">{{ .Summary.Total }} issues found &nbsp;·&nbsp; {{ .Summary.BySeverity.Blocker }} blocker, {{ .Summary.BySeverity.Critical }} critical, {{ .Summary.BySeverity.Major }} major</div>
+  {{ else }}
+  <div class="status-banner clean">No issues found — code is clean</div>
+  {{ end }}
+
+  <!-- Summary -->
+  <section class="summary-section">
+    <div class="summary-grid">
+      <div class="stat-card stat-primary">
+        <span class="stat-number">{{ .Summary.Total }}</span>
+        <span class="stat-label">Total</span>
+      </div>
+      <div class="stat-card stat-blocker">
+        <span class="stat-number">{{ .Summary.BySeverity.Blocker }}</span>
+        <span class="stat-label">Blocker</span>
+      </div>
+      <div class="stat-card stat-critical">
+        <span class="stat-number">{{ .Summary.BySeverity.Critical }}</span>
+        <span class="stat-label">Critical</span>
+      </div>
+      <div class="stat-card stat-major">
+        <span class="stat-number">{{ .Summary.BySeverity.Major }}</span>
+        <span class="stat-label">Major</span>
+      </div>
+      <div class="stat-card stat-minor">
+        <span class="stat-number">{{ .Summary.BySeverity.Minor }}</span>
+        <span class="stat-label">Minor</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- Issues by Severity -->
+  <section class="issues-section">
+    {{ if .SeverityGroups }}
+    {{ range .SeverityGroups }}
+    <div class="sev-group">
+      <div class="sev-heading">
+        <span class="sev-name {{ sqSeverityClass .Severity }}">{{ sqSeverityLabel .Severity }}</span>
+        <span class="sev-count">{{ len .Issues }} issue{{ if gt (len .Issues) 1 }}s{{ end }}</span>
+      </div>
+      <table class="issues-table">
+        <thead>
+          <tr>
+            <th>Rule</th>
+            <th>Type</th>
+            <th>File</th>
+            <th>Line</th>
+            <th>Message</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .Issues }}
+          <tr>
+            <td class="td-rule">{{ .Rule }}</td>
+            <td class="td-type"><span class="type-badge">{{ sqTypeLabel .Type }}</span></td>
+            <td class="td-file">{{ sqFileFromComp .Component }}</td>
+            <td class="td-line">{{ .Line }}</td>
+            <td class="td-msg">{{ .Message }}</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+    {{ end }}
+    {{ else }}
+    <p style="font-family:'Courier New',monospace;font-size:0.82rem;color:var(--ink-muted);text-align:center;padding:2rem 0;">No issues in report.</p>
+    {{ end }}
+  </section>
+
+  <!-- Footer -->
+  <footer class="report-footer">
+    <span class="footer-total">
+      {{ .Summary.Total }} issues &nbsp;·&nbsp;
+      {{ .Summary.ByType.Bug }} bugs &nbsp;·&nbsp;
+      {{ .Summary.ByType.CodeSmell }} code smells &nbsp;·&nbsp;
+      {{ .Summary.ByType.Vulnerability }} vulnerabilities
+    </span>
+    <span class="footer-brand">devops-reporter · sonarqube</span>
+  </footer>
+
+</body>
+</html>
