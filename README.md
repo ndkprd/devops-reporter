@@ -15,6 +15,7 @@ This project is independently developed and is not affiliated with, endorsed by,
 | `tenable-was` | [Tenable WAS](https://www.tenable.com/products/web-app-scanning) web application security scan reports |
 | `sbom-cdx` | [CycloneDX](https://cyclonedx.org/) Software Bill of Materials reports |
 | `dependency-check` | [OWASP Dependency-Check](https://owasp.org/www-project-dependency-check/) vulnerability reports |
+| `sonarqube` | [SonarQube](https://www.sonarsource.com/products/sonarqube/) static code analysis reports |
 
 ## Installation
 
@@ -36,7 +37,7 @@ docker build -t devops-reporter .
 
 | Flag | Default | Description |
 |---|---|---|
-| `-source` | | **(required)** Report source: `argocd`, `kubeconform`, `tenable-was`, `sbom-cdx`, `dependency-check` |
+| `-source` | | **(required)** Report source: `argocd`, `kubeconform`, `tenable-was`, `sbom-cdx`, `dependency-check`, `sonarqube` |
 | `-o` | `report.html` | Output file path for the generated HTML report |
 | `-title` | *(source default)* | Title displayed in the report header |
 | `-template` | *(built-in)* | Path to a custom HTML template file |
@@ -100,6 +101,16 @@ cat dependency-check-report.json | devops-reporter -source dependency-check
 cat dependency-check-report.json | devops-reporter -source dependency-check -o dep-report.html -title "Dependency Scan — my-app"
 ```
 
+### SonarQube
+
+```bash
+cat sonarqube-issues.json | devops-reporter -source sonarqube
+```
+
+```bash
+cat sonarqube-issues.json | devops-reporter -source sonarqube -o sonarqube-report.html -title "Code Analysis — my-app (main)"
+```
+
 ### From a file
 
 ```bash
@@ -108,6 +119,7 @@ cat tests/kubeconform/input.json | devops-reporter -source kubeconform -o report
 cat tests/tenable-was/tenable-was-sample.json | devops-reporter -source tenable-was -o report.html
 cat tests/sbom-cdx/sbom-cdx-sample.json | devops-reporter -source sbom-cdx -o report.html
 cat tests/input.depcheck.json | devops-reporter -source dependency-check -o report.html
+cat tests/input.sonarqube.json | devops-reporter -source sonarqube -o report.html
 ```
 
 ### In GitLab CI/CD

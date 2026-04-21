@@ -24,6 +24,7 @@ sidebar_position: 1
 | `tenable-was` | Tenable WAS JSON export | Web application security scan reports |
 | `sbom-cdx` | CycloneDX JSON | Software Bill of Materials (SBOM) reports |
 | `dependency-check` | Dependency-Check JSON | OWASP Dependency-Check vulnerability reports |
+| `sonarqube` | SonarQube issues API JSON | Static code analysis reports |
 
 ## Quick Start
 
@@ -42,6 +43,9 @@ cat sbom.json | devops-reporter -source sbom-cdx -o sbom-report.html
 
 # Dependency-Check report
 cat dependency-check-report.json | devops-reporter -source dependency-check -o dep-report.html
+
+# SonarQube analysis report
+cat sonarqube-issues.json | devops-reporter -source sonarqube -o sonarqube-report.html
 ```
 
 ## Disclaimer
