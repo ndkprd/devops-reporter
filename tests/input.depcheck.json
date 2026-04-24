@@ -22,6 +22,89 @@
     }
   },
   "dependencies" : [ {
+    "isVirtual" : true,
+    "fileName" : "lodash:4.17.4",
+    "filePath" : "/builds/itops/sample-project/node_modules/lodash",
+    "md5" : "",
+    "sha1" : "",
+    "sha256" : "",
+    "packages" : [ {
+      "id" : "pkg:npm/lodash@4.17.4",
+      "confidence" : "HIGHEST",
+      "url" : "https://ossindex.sonatype.org/component/pkg:npm/lodash@4.17.4"
+    } ],
+    "evidenceCollected" : {
+      "vendorEvidence" : [ ],
+      "productEvidence" : [ ],
+      "versionEvidence" : [ ]
+    },
+    "vulnerabilities" : [ {
+      "source" : "NVD",
+      "name" : "CVE-2019-10744",
+      "severity" : "CRITICAL",
+      "cvssv3" : {
+        "baseScore" : 9.8,
+        "baseSeverity" : "CRITICAL",
+        "attackVector" : "NETWORK"
+      },
+      "cwes" : [ "CWE-1321" ],
+      "description" : "## [CVE-2019-10744](https://www.cve.org/CVERecord?id=CVE-2019-10744)\n\n**Severity**: Critical\n\n### Description\n\n**[DISPUTED]** Versions of `lodash` prior to 4.17.12 are vulnerable to **Prototype Pollution**.\n\nThe function `defaultsDeep` allows a malicious user to modify the prototype of `Object` via `{constructor: {prototype: ...}}` causing the addition or modification of an existing property that will exist on all objects.\n\n### References\n\nSee [GHSA-jf85-cpcp-j695](https://github.com/advisories/GHSA-jf85-cpcp-j695) for full advisory details.",
+      "references" : [ {
+        "source" : "NVD",
+        "url" : "https://nvd.nist.gov/vuln/detail/CVE-2019-10744",
+        "name" : "CVE-2019-10744"
+      } ]
+    }, {
+      "source" : "NPM",
+      "name" : "CVE-2020-8203",
+      "severity" : "HIGH",
+      "cvssv3" : {
+        "baseScore" : 7.4,
+        "baseSeverity" : "HIGH",
+        "attackVector" : "NETWORK"
+      },
+      "cwes" : [ "CWE-1321" ],
+      "description" : "Prototype pollution attack when using `_.zipObjectDeep` in **lodash before 4.17.20**.\n\nThis allows an attacker to add or modify properties of `Object.prototype`, which may lead to logical errors or denial of service. The fix is to upgrade to `lodash >= 4.17.20`.",
+      "references" : [ {
+        "source" : "NPM",
+        "url" : "https://npmjs.com/advisories/1523",
+        "name" : "NPM Advisory 1523"
+      } ]
+    } ]
+  }, {
+    "isVirtual" : true,
+    "fileName" : "jquery:3.3.1",
+    "filePath" : "/builds/itops/sample-project/node_modules/jquery",
+    "md5" : "",
+    "sha1" : "",
+    "sha256" : "",
+    "packages" : [ {
+      "id" : "pkg:npm/jquery@3.3.1",
+      "confidence" : "HIGHEST",
+      "url" : "https://ossindex.sonatype.org/component/pkg:npm/jquery@3.3.1"
+    } ],
+    "evidenceCollected" : {
+      "vendorEvidence" : [ ],
+      "productEvidence" : [ ],
+      "versionEvidence" : [ ]
+    },
+    "vulnerabilities" : [ {
+      "source" : "NVD",
+      "name" : "CVE-2020-11022",
+      "severity" : "MEDIUM",
+      "cvssv2" : {
+        "score" : 4.3,
+        "severity" : "MEDIUM"
+      },
+      "cwes" : [ "CWE-79" ],
+      "description" : "In jQuery versions **>= 1.2 and < 3.5.0**, passing HTML from untrusted sources to one of jQuery's DOM manipulation methods (i.e. `.html()`, `.append()`) may execute untrusted code.\n\nThis problem is patched in **jQuery 3.5.0**. To work around the issue without upgrading, use [DOMPurify](https://github.com/cure53/DOMPurify) to sanitize HTML before passing it to jQuery.",
+      "references" : [ {
+        "source" : "NVD",
+        "url" : "https://nvd.nist.gov/vuln/detail/CVE-2020-11022",
+        "name" : "CVE-2020-11022"
+      } ]
+    } ]
+  }, {
     "isVirtual" : false,
     "fileName" : "app-init.js",
     "filePath" : "/builds/itops/sample-project/src/js/app-init.js",

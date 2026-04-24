@@ -141,7 +141,6 @@
     .vuln-source { font-family: 'Courier New', monospace; font-size: 0.65rem; color: var(--ink-muted); white-space: nowrap; }
 
     .vuln-score { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--ink-muted); margin-bottom: 0.4rem; }
-    .vuln-desc { font-size: 0.8rem; line-height: 1.5; color: var(--ink-muted); white-space: pre-line; }
 
     .vuln-tags { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.4rem; }
     .tag {
@@ -159,6 +158,53 @@
     .badge.sev-medium   { background: var(--med-bg);  color: var(--med-fg);  border-color: var(--med-bd); }
     .badge.sev-low      { background: var(--low-bg);  color: var(--low-fg);  border-color: var(--low-bd); }
     .badge.sev-info     { background: var(--info-bg); color: var(--info-fg); border-color: var(--info-bd); }
+
+    /* ── Vulnerability summary groups ── */
+    .sev-group { margin-bottom: 1.8rem; }
+    .sev-group:last-child { margin-bottom: 0; }
+    .sev-heading {
+      display: flex; align-items: center; gap: 0.8rem;
+      padding-bottom: 0.4rem; border-bottom: 2px solid var(--rule-heavy); margin-bottom: 0.6rem;
+    }
+    .sev-name { font-family: 'Georgia', serif; font-size: 1.05rem; font-weight: bold; }
+    .sev-name.sev-critical { color: var(--crit-fg); }
+    .sev-name.sev-high     { color: var(--high-fg); }
+    .sev-name.sev-medium   { color: var(--med-fg); }
+    .sev-name.sev-low      { color: var(--low-fg); }
+    .sev-name.sev-info     { color: var(--info-fg); }
+    .sev-count { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--ink-muted); }
+
+    /* ── Vulnerability summary table ── */
+    .vuln-summary { width: 100%; border-collapse: collapse; font-size: 0.78rem; border: 1px solid var(--rule); }
+    .vuln-summary th {
+      font-family: 'Courier New', monospace; font-size: 0.62rem; text-transform: uppercase;
+      letter-spacing: 0.1em; color: var(--ink-muted); padding: 0.55rem 0.75rem; text-align: left;
+      border-bottom: 2px solid var(--rule-heavy); background: #f4f3f0;
+    }
+    .vuln-summary td { padding: 0.45rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: middle; }
+    .vuln-summary tr:last-child td { border-bottom: none; }
+    .vuln-summary tr:hover td { background: #f7f6f3; }
+    .vs-name { font-family: 'Courier New', monospace; font-size: 0.72rem; font-weight: bold; }
+    .vs-dep  { font-size: 0.75rem; color: var(--accent); font-weight: 600; }
+    .vs-cvss { font-family: 'Courier New', monospace; font-size: 0.68rem; color: var(--ink-muted); white-space: nowrap; }
+
+    /* ── Vuln description (markdown) ── */
+    .vuln-desc p { font-size: 0.8rem; line-height: 1.55; color: var(--ink-muted); margin-bottom: 0.5rem; }
+    .vuln-desc p:last-child { margin-bottom: 0; }
+    .vuln-desc h3, .vuln-desc h4, .vuln-desc h5 {
+      font-family: 'Georgia', serif; font-size: 0.78rem; font-weight: bold;
+      color: var(--ink); margin: 0.6rem 0 0.2rem;
+    }
+    .vuln-desc h3:first-child, .vuln-desc h4:first-child, .vuln-desc h5:first-child { margin-top: 0; }
+    .vuln-desc strong { font-weight: 700; color: var(--ink); }
+    .vuln-desc code { font-family: 'Courier New', monospace; font-size: 0.75rem; background: #f0ede8; padding: 0.1rem 0.3rem; border-radius: 2px; }
+    .vuln-desc a { color: var(--accent); }
+    .vuln-desc ul { padding-left: 1.2rem; margin-bottom: 0.5rem; }
+    .vuln-desc ul:last-child { margin-bottom: 0; }
+    .vuln-desc li { font-size: 0.8rem; line-height: 1.55; color: var(--ink-muted); margin-bottom: 0.15rem; }
+    .vuln-desc pre { background: #f0ede8; border: 1px solid var(--rule); border-radius: 2px; padding: 0.5rem 0.7rem; overflow-x: auto; margin-bottom: 0.5rem; }
+    .vuln-desc pre:last-child { margin-bottom: 0; }
+    .vuln-desc pre code { background: none; border: none; padding: 0; font-size: 0.72rem; line-height: 1.5; }
 
     /* ── Clean deps table ── */
     .clean-table { width: 100%; border-collapse: collapse; font-size: 0.78rem; }
@@ -275,6 +321,41 @@
     </div>
   </section>
 
+  <!-- Vulnerability Summary -->
+  {{ if .VulnGroups }}
+  <section class="section">
+    <div class="section-title">Vulnerability Summary</div>
+    {{ range .VulnGroups }}
+    <div class="sev-group">
+      <div class="sev-heading">
+        <span class="sev-name {{ depSevClass .Severity }}">{{ depSevLabel .Severity }}</span>
+        <span class="sev-count">{{ len .Entries }} {{ if eq (len .Entries) 1 }}vulnerability{{ else }}vulnerabilities{{ end }}</span>
+      </div>
+      <table class="vuln-summary">
+        <thead>
+          <tr>
+            <th>Dependency</th>
+            <th>Severity</th>
+            <th>CVE / Name</th>
+            <th>CVSS</th>
+          </tr>
+        </thead>
+        <tbody>
+          {{ range .Entries }}
+          <tr>
+            <td class="vs-dep">{{ .DepName }}</td>
+            <td><span class="badge {{ depSevClass .Severity }}">{{ depSevLabel .Severity }}</span></td>
+            <td class="vs-name">{{ .CVEName }}</td>
+            <td class="vs-cvss">{{ .CVSS }}</td>
+          </tr>
+          {{ end }}
+        </tbody>
+      </table>
+    </div>
+    {{ end }}
+  </section>
+  {{ end }}
+
   <!-- Vulnerable Dependencies -->
   {{ if .VulnerableDeps }}
   <section class="section">
@@ -313,7 +394,7 @@
           </div>
           {{ end }}
           {{ if .Description }}
-          <p class="vuln-desc">{{ .Description }}</p>
+          <div class="vuln-desc">{{ depMarkdown .Description }}</div>
           {{ end }}
           {{ if or .CWEs .References }}
           <div class="vuln-tags">

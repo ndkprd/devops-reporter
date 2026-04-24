@@ -22,7 +22,7 @@ sidebar_position: 1
 | `argocd` | `argocd app get -o json` | ArgoCD Application deployment status reports |
 | `kubeconform` | `kubeconform -output json` | Kubernetes manifest validation reports |
 | `tenable-was` | Tenable WAS JSON export | Web application security scan reports |
-| `sbom-cdx` | CycloneDX JSON | Software Bill of Materials (SBOM) reports |
+| `cyclonedx` | CycloneDX JSON | Software Bill of Materials (SBOM) reports |
 | `dependency-check` | Dependency-Check JSON | OWASP Dependency-Check vulnerability reports |
 | `sonarqube` | SonarQube issues API JSON | Static code analysis reports |
 | `trivy` | Trivy JSON (`-f json`) | Container image vulnerability and package inventory reports |
@@ -40,7 +40,7 @@ kubeconform -output json ./manifests/ | devops-reporter -source kubeconform -o r
 cat scan-report.json | devops-reporter -source tenable-was -o was-report.html
 
 # CycloneDX SBOM report
-cat sbom.json | devops-reporter -source sbom-cdx -o sbom-report.html
+cat sbom.json | devops-reporter -source cyclonedx -o sbom-report.html
 
 # Dependency-Check report
 cat dependency-check-report.json | devops-reporter -source dependency-check -o dep-report.html

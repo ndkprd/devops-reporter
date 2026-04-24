@@ -3,7 +3,10 @@ package main
 import (
 	_ "embed"
 	"encoding/json"
+	"fmt"
+	"html"
 	"html/template"
+	"regexp"
 	"sort"
 	"strings"
 	"time"
@@ -17,8 +20,10 @@ func init() {
 		DefaultTitle: "Dependency-Check Report",
 		Template:     depCheckTemplate,
 		FuncMap: template.FuncMap{
-			"depSevClass": depSevClass,
-			"depSevLabel": depSevLabel,
+			"depSevClass":    depSevClass,
+			"depSevLabel":    depSevLabel,
+			"depMarkdown":    depMarkdownToHTML,
+			"depCVSSScore":   depCVSSScore,
 		},
 		Parse: func(data []byte, title string) (any, error) {
 			var report DepReport
@@ -128,6 +133,18 @@ type DepSummary struct {
 	Info       int
 }
 
+type DepVulnEntry struct {
+	DepName  string
+	CVEName  string
+	Severity string
+	CVSS     string
+}
+
+type DepVulnGroup struct {
+	Severity string
+	Entries  []DepVulnEntry
+}
+
 type DepReportData struct {
 	Title          string
 	GeneratedAt    string
@@ -136,6 +153,7 @@ type DepReportData struct {
 	EngineVersion  string
 	DataSources    []DepDataSource
 	Summary        DepSummary
+	VulnGroups     []DepVulnGroup
 	VulnerableDeps []DepDependency
 	CleanDeps      []DepDependency
 	Credits        []DepCredit
@@ -234,6 +252,27 @@ func BuildDepReportData(r DepReport, title string) DepReportData {
 		return vulnDeps[i].FileName < vulnDeps[j].FileName
 	})
 
+	// Build VulnGroups: severity-ordered groups for the summary table
+	sevOrder := []string{"critical", "high", "medium", "low", "info"}
+	groupMap := make(map[string][]DepVulnEntry)
+	for _, d := range vulnDeps {
+		for _, v := range d.Vulnerabilities {
+			norm := depNormSeverity(v.Severity)
+			groupMap[norm] = append(groupMap[norm], DepVulnEntry{
+				DepName:  d.FileName,
+				CVEName:  v.Name,
+				Severity: norm,
+				CVSS:     depCVSSScore(v),
+			})
+		}
+	}
+	vulnGroups := make([]DepVulnGroup, 0, len(sevOrder))
+	for _, sev := range sevOrder {
+		if entries, ok := groupMap[sev]; ok {
+			vulnGroups = append(vulnGroups, DepVulnGroup{Severity: sev, Entries: entries})
+		}
+	}
+
 	reportDate := depFormatTimestamp(r.ProjectInfo.ReportDate)
 
 	creditKeys := make([]string, 0, len(r.ProjectInfo.Credits))
@@ -254,6 +293,7 @@ func BuildDepReportData(r DepReport, title string) DepReportData {
 		EngineVersion:  r.ScanInfo.EngineVersion,
 		DataSources:    r.ScanInfo.DataSource,
 		Summary:        summary,
+		VulnGroups:     vulnGroups,
 		VulnerableDeps: vulnDeps,
 		CleanDeps:      cleanDeps,
 		Credits:        credits,
@@ -274,6 +314,130 @@ func depFormatTimestamp(s string) string {
 		}
 	}
 	return s
+}
+
+var (
+	reMDBold = regexp.MustCompile(`\*\*([^*\n]+)\*\*`)
+	reMDCode = regexp.MustCompile("`([^`\n]+)`")
+	reMDLink = regexp.MustCompile(`\[([^\]\n]+)\]\(([^)\n]+)\)`)
+)
+
+func depInline(s string) string {
+	s = html.EscapeString(s)
+	s = reMDBold.ReplaceAllString(s, `<strong>$1</strong>`)
+	s = reMDCode.ReplaceAllString(s, `<code>$1</code>`)
+	s = reMDLink.ReplaceAllString(s, `<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>`)
+	return s
+}
+
+func depMarkdownToHTML(s string) template.HTML {
+	if s == "" {
+		return ""
+	}
+
+	var sb strings.Builder
+	var paraLines []string
+	var listItems []string
+	inCode := false
+	var codeLines []string
+
+	flushPara := func() {
+		if len(paraLines) == 0 {
+			return
+		}
+		sb.WriteString("<p>")
+		for i, l := range paraLines {
+			if i > 0 {
+				sb.WriteString("<br>")
+			}
+			sb.WriteString(depInline(l))
+		}
+		sb.WriteString("</p>")
+		paraLines = paraLines[:0]
+	}
+	flushList := func() {
+		if len(listItems) == 0 {
+			return
+		}
+		sb.WriteString("<ul>")
+		for _, item := range listItems {
+			sb.WriteString("<li>")
+			sb.WriteString(depInline(item))
+			sb.WriteString("</li>")
+		}
+		sb.WriteString("</ul>")
+		listItems = listItems[:0]
+	}
+	flushCode := func() {
+		if len(codeLines) == 0 {
+			return
+		}
+		sb.WriteString("<pre><code>")
+		sb.WriteString(html.EscapeString(strings.Join(codeLines, "\n")))
+		sb.WriteString("</code></pre>")
+		codeLines = codeLines[:0]
+	}
+
+	for _, line := range strings.Split(s, "\n") {
+		if strings.HasPrefix(line, "```") {
+			if inCode {
+				inCode = false
+				flushCode()
+			} else {
+				flushPara()
+				flushList()
+				inCode = true
+			}
+			continue
+		}
+		if inCode {
+			codeLines = append(codeLines, line)
+			continue
+		}
+		switch {
+		case strings.HasPrefix(line, "### "):
+			flushPara()
+			flushList()
+			sb.WriteString("<h5>")
+			sb.WriteString(depInline(strings.TrimPrefix(line, "### ")))
+			sb.WriteString("</h5>")
+		case strings.HasPrefix(line, "## "):
+			flushPara()
+			flushList()
+			sb.WriteString("<h4>")
+			sb.WriteString(depInline(strings.TrimPrefix(line, "## ")))
+			sb.WriteString("</h4>")
+		case strings.HasPrefix(line, "# "):
+			flushPara()
+			flushList()
+			sb.WriteString("<h3>")
+			sb.WriteString(depInline(strings.TrimPrefix(line, "# ")))
+			sb.WriteString("</h3>")
+		case strings.HasPrefix(line, "- ") || strings.HasPrefix(line, "* "):
+			flushPara()
+			listItems = append(listItems, line[2:])
+		case strings.TrimSpace(line) == "":
+			flushPara()
+			flushList()
+		default:
+			flushList()
+			paraLines = append(paraLines, line)
+		}
+	}
+	flushPara()
+	flushList()
+
+	return template.HTML(sb.String())
+}
+
+func depCVSSScore(v DepVulnerability) string {
+	if v.CVSSv3 != nil {
+		return fmt.Sprintf("%.1f v3", v.CVSSv3.BaseScore)
+	}
+	if v.CVSSv2 != nil {
+		return fmt.Sprintf("%.1f v2", v.CVSSv2.Score)
+	}
+	return "—"
 }
 
 func depSevClass(severity string) string {

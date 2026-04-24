@@ -4,7 +4,7 @@ sidebar_position: 4
 
 # CycloneDX SBOM
 
-The `sbom-cdx` source reads [CycloneDX](https://cyclonedx.org/) JSON Software Bill of Materials (SBOM) files and generates a component inventory report. CycloneDX is an OWASP standard format supported by tools like [cdxgen](https://github.com/CycloneDX/cdxgen), [Syft](https://github.com/anchore/syft), and [Trivy](https://github.com/aquasecurity/trivy).
+The `cyclonedx` source reads [CycloneDX](https://cyclonedx.org/) JSON Software Bill of Materials (SBOM) files and generates a component inventory report. CycloneDX is an OWASP standard format supported by tools like [cdxgen](https://github.com/CycloneDX/cdxgen), [Syft](https://github.com/anchore/syft), and [Trivy](https://github.com/aquasecurity/trivy).
 
 ## Input
 
@@ -24,11 +24,11 @@ trivy fs --format cyclonedx --output sbom.json .
 ## Usage
 
 ```bash
-cat sbom.json | devops-reporter -source sbom-cdx
+cat sbom.json | devops-reporter -source cyclonedx
 ```
 
 ```bash
-cat sbom.json | devops-reporter -source sbom-cdx \
+cat sbom.json | devops-reporter -source cyclonedx \
   -o sbom-report.html \
   -title "SBOM — my-app (v1.0.0)"
 ```
@@ -65,7 +65,7 @@ sbom-report:
   script:
     - cdxgen -t npm -o sbom.json .
     - |
-      cat sbom.json | devops-reporter -source sbom-cdx \
+      cat sbom.json | devops-reporter -source cyclonedx \
         -o sbom-report.html \
         -title "SBOM — ${CI_PROJECT_NAME} (${CI_COMMIT_SHORT_SHA})"
   artifacts:
