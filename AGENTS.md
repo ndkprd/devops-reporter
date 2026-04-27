@@ -2,7 +2,7 @@
 
 ## Project Overview
 
-CLI tool that reads JSON output from DevSecOps tools (ArgoCD, Kubeconform, Tenable WAS, CycloneDX SBOM, OWASP Dependency-Check) and generates self-contained static HTML reports.
+CLI tool that reads JSON output from DevSecOps tools (ArgoCD, Kubeconform, Tenable WAS, CycloneDX SBOM, OWASP Dependency-Check, SonarQube, Trivy) and generates self-contained static HTML reports.
 
 ## Build Commands
 
@@ -16,9 +16,6 @@ docker build -t devops-reporter .
 # Run tests (none currently exist)
 go test ./...
 
-# Run single test
-go test -v -run TestName ./...
-
 # Format code
 go fmt ./...
 
@@ -29,119 +26,106 @@ go vet ./...
 go mod tidy
 ```
 
+## Architecture
+
+The tool uses a single unified HTML template (`cmd/templates/report.html`) with an embedded CSS theme (`cmd/templates/themes/paper.css`). All seven sources share the same template and rendering pipeline.
+
+### Data flow
+
+1. `main.go` reads stdin JSON, selects the registered `ReportSource`, calls its `Parse` func.
+2. Each source's `Build*ReportData()` adapter maps the source-specific JSON structs into a generic `ReportData` value.
+3. `main.go` injects the chosen CSS into `ReportData.CSS` and executes the unified template.
+
+### Generic data contract (`cmd/report.go`)
+
+Every source adapter returns `ReportData`:
+
+```go
+type ReportData struct {
+    Title, OrgName, Eyebrow, Subtitle, GeneratedAt string
+    Status     string         // "issues" | "clean"
+    StatusLine string
+    Meta        []KV
+    ExtraPanels []template.HTML // identity panels shown even with --summary-only
+    Summary     []StatCard
+    Sections    []Section
+    SummaryOnly bool           // injected by main after parse
+    Footer      FooterInfo
+    CSS         template.CSS   // injected by main after parse
+}
+```
+
+`OrgName` is injected by `main` from the `--org` flag after parse (same pattern as `SummaryOnly`). When non-empty it is rendered in the `header-stamp` block (above the "Generated" timestamp) and as `footer-org` in the report footer.
+
+`Section` has a `Kind` discriminator (`"table"` | `"cards"` | `"raw"`) that selects which named sub-template renders it. `SectionGroup` holds either `Rows [][]template.HTML` (table) or `Cards []Card` (cards).
+
+All cell-level formatting (badges, links, mono code) is done in Go via `BadgeHTML`, `LinkHTML`, `MonoHTML` helpers — the template never touches source-specific vocabulary.
+
+### Canonical CSS class vocabulary
+
+Both `paper.css` and any custom CSS must target these class names:
+
+- **State**: `state-pass`, `state-fail`, `state-warn`, `state-neutral`
+- **Severity**: `sev-critical`, `sev-high`, `sev-medium`, `sev-low`, `sev-info`, `sev-blocker`, `sev-unknown`
+- **Badges**: `badge` + one state/severity modifier (e.g. `badge sev-critical`, `badge state-pass`)
+- **Stat cards**: `stat-card`, `stat-<variant>` where variant matches `StatCard.Variant`
+- **Group heading**: `group-heading`, `group-name`, `group-count` — the severity/state class is applied to **both** the `group-heading` div and the inner `group-name` span, so themes can colour the left border, background tint, and name text from a single class rule
+- **Layout**: `report-header`, `header-issues`, `header-clean`, `header-stamp`, `stamp-org`, `scan-meta`, `status-banner`, `summary-grid`, `section`, `section-title`, `group-heading`, `report-table`, `card`, `extra-panel`, `report-footer`, `footer-org`
+
+Source-specific status strings (Synced/OutOfSync/Healthy/CRITICAL/Blocker/etc.) are mapped to canonical classes inside each source's Go adapter — never in templates or CSS.
+
 ## Code Style Guidelines
 
 ### Go Version
 - Use Go 1.26
 
 ### Structure
-Each source handler (argocd, kubeconform, tenable-was, sbom-cdx, dep-check) is a separate file under `cmd/` with:
-1. `init()` function that registers the source via `RegisterSource()`
-2. Input types (JSON binding structs)
-3. Report types (internal data structures)
-4. Builder function (`Build*ReportData`)
-5. Template helper functions
+Each source handler is a separate file under `cmd/` with:
+1. `init()` registers the source via `RegisterSource(name, &ReportSource{DefaultTitle, Parse})`
+2. Input types (JSON binding structs — keep as-is)
+3. `Build*ReportData(input, title string) ReportData` adapter function
+4. Unexported helper functions (canonical class mappers, cell renderers, etc.)
 
-### Type Definitions
-```go
-// Input types - JSON binding structs use PascalCase fields with json tags
-type ArgoResource struct {
-    Group     string `json:"group"`
-    Version   string `json:"version"`
-    Kind      string `json:"kind"`
-}
+No per-source HTML templates. No `FuncMap` on `ReportSource`. All rendering logic lives in Go.
 
-// Report types - internal structures use PascalCase without tags
-type ArgoReportData struct {
-    Title       string
-    Summary     ArgoResourceSummary
-    Groups      []ArgoKindGroup
-}
-```
+### Adding a new source
+
+1. Create `cmd/<source>.go`
+2. Define JSON input structs
+3. Write `Build<Source>ReportData` returning `ReportData` with appropriate `Sections`
+4. Register in `init()` with `RegisterSource("<name>", &ReportSource{...})`
+5. Add a sample JSON input to `tests/`
+
+### Section shapes
+
+| Kind | Use when | Key fields |
+|---|---|---|
+| `"table"` | Tabular rows grouped by a dimension | `Groups[].Columns`, `Groups[].Rows [][]template.HTML` |
+| `"cards"` | Rich findings with long-form body text | `Groups[].Cards []Card` |
+| `"raw"` | Arbitrary pre-rendered HTML blocks | `Section.HTML template.HTML` |
 
 ### Section Headers
-Use `// ── Section Name ──` comment separators to organize code:
+Use `// ── Section Name ──` comment separators:
 ```go
 // ── Input types ──────────────────────────────────────────────────
 
-// ── Report types ─────────────────────────────────────────────────
+// ── Adapter ──────────────────────────────────────────────────────
+
+// ── Helpers ──────────────────────────────────────────────────────
 ```
 
-### Error Handling
-- Use early returns with `if err != nil`
-- Return errors directly from parse functions
-- Wrap errors with context where helpful
-
-### Naming Conventions
-- Files: lowercase with hyphens (e.g., `sbom-cdx.go`, `tenable-was.go`)
-- Types: PascalCase (e.g., `ArgoReportData`, `CdxComponent`)
-- Functions: PascalCase for exported, camelCase for unexported
-- Template funcs: descriptive names like `syncClass`, `healthClass`, `wasRiskClass`
-- Variables: camelCase, prefer meaningful names over abbreviations
-
 ### Imports
-Standard library only. Use grouping:
+Standard library only. Use single import block (no subgroups):
 ```go
 import (
     "encoding/json"
+    "fmt"
     "html/template"
     "sort"
+    "strings"
     "time"
 )
 ```
-
-### Common Patterns
-
-**Grouping resources by kind:**
-```go
-kindMap := make(map[string][]ArgoResource)
-for _, r := range app.Status.Resources {
-    kindMap[r.Kind] = append(kindMap[r.Kind], r)
-}
-kinds := make([]string, 0, len(kindMap))
-for k := range kindMap {
-    kinds = append(kinds, k)
-}
-sort.Strings(kinds)
-groups := make([]ArgoKindGroup, 0, len(kinds))
-for _, kind := range kinds {
-    resources := kindMap[kind]
-    sort.Slice(resources, func(i, j int) bool {
-        return resources[i].Name < resources[j].Name
-    })
-    groups = append(groups, ArgoKindGroup{Kind: kind, Resources: resources})
-}
-```
-
-**Template helper functions for CSS classes:**
-```go
-func syncClass(status string) string {
-    switch status {
-    case "Synced":
-        return "sync-synced"
-    case "OutOfSync":
-        return "sync-outofsync"
-    default:
-        return "sync-unknown"
-    }
-}
-
-func healthClass(status string) string {
-    switch status {
-    case "Healthy":
-        return "health-healthy"
-    case "Degraded":
-        return "health-degraded"
-    default:
-        return "health-unknown"
-    }
-}
-```
-
-### Templates
-- Use `//go:embed` directives to embed HTML templates
-- Template files stored in `cmd/templates/` directory
-- FuncMap provided for custom template functions
 
 ### Docker
 - Multi-stage builds
@@ -149,27 +133,28 @@ func healthClass(status string) string {
 - Runtime stage: `alpine:3.23`
 - Binary placed at `/usr/local/bin/devops-reporter`
 
-### Testing
-- Test files follow `*_test.go` naming
-- Use table-driven tests where appropriate
-- Test data files stored in `tests/` directory as JSON
-
 ## File Structure
 
 ```
 cmd/
-├── main.go              # Entry point, CLI flags, source registration
-├── argocd.go            # ArgoCD report handler
-├── kubeconform.go       # Kubeconform report handler
-├── tenable-was.go       # Tenable WAS report handler
-├── sbom-cdx.go          # CycloneDX SBOM report handler
-├── dep-check.go         # OWASP Dependency-Check handler
-└── templates/           # Embedded HTML templates
-    ├── argocd.html
-    ├── kubeconform.html
-    ├── tenable-was.html
-    ├── sbom-cdx.html
-    └── dep-check.html
+├── main.go              # Entry point, CLI flags, CSS/template resolution
+├── report.go            # Generic ReportData types + shared helpers
+├── argocd.go
+├── kubeconform.go
+├── tenable-was.go
+├── sbom-cdx.go
+├── dep-check.go
+├── sonarqube.go
+├── trivy.go
+└── templates/
+    ├── report.html          # Single unified HTML template (embedded)
+    └── themes/
+        └── paper.css        # Default embedded theme
+themes/
+└── dracula.css              # Dracula dark theme — #282a36 bg, purple/cyan/pink palette, JetBrains Mono
 tests/
-└── *.json               # Sample input files for each source
+├── input.*.json             # Sample input files for each source
+├── test.sh                  # Runs all sub-scripts then serves outputs on :8182
+├── test.default.sh          # Generates output.*.default.html with built-in paper theme
+└── test.dracula.sh          # Generates output.*.dracula.html with themes/dracula.css
 ```

@@ -1,0 +1,379 @@
+/* ── Reset ─────────────────────────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* ── Design tokens ──────────────────────────────────────────────── */
+:root {
+  --ink:        #1a1916;
+  --ink-muted:  #5a5753;
+  --paper:      #faf9f6;
+  --rule:       #d4cfc8;
+  --rule-heavy: #9a9490;
+
+  /* Severity palette */
+  --crit-bg: #fdf0f0; --crit-fg: #7a1515; --crit-bd: #c0392b;
+  --high-bg: #fdf5ec; --high-fg: #7a3800; --high-bd: #d4691e;
+  --med-bg:  #fdfaec; --med-fg:  #7a5200; --med-bd:  #d4a01e;
+  --low-bg:  #f0f7f2; --low-fg:  #1b5e38; --low-bd:  #2e7d52;
+  --info-bg: #f4f4f2; --info-fg: #4a4844; --info-bd: #8a8480;
+
+  /* SonarQube blocker */
+  --blocker-bg: #fce8e8; --blocker-fg: #8b0000; --blocker-bd: #dc2222;
+
+  /* Pass / warn */
+  --pass-bg:    #f0f7f2; --pass-fg:   #1b5e38; --pass-bd:   #2e7d52;
+  --fail-bg:    #fdf0f0; --fail-fg:   #7a1515; --fail-bd:   #c0392b;
+  --warn-bg:    #fdf5ec; --warn-fg:   #7a3800; --warn-bd:   #d4691e;
+  --neutral-bg: #f4f4f2; --neutral-fg:#4a4844; --neutral-bd:#8a8480;
+
+  --accent:  #1a3a5c;
+  --accent2: #5c1a1a;
+}
+
+/* ── Base ───────────────────────────────────────────────────────── */
+html { font-size: 13px; background: #e8e5e0; }
+
+body {
+  font-family: 'Georgia', 'Times New Roman', Times, serif;
+  color: var(--ink);
+  background: var(--paper);
+  max-width: 980px;
+  margin: 2rem auto;
+  box-shadow: 0 2px 24px rgba(0,0,0,0.18);
+}
+
+/* ── Header ─────────────────────────────────────────────────────── */
+.report-header {
+  padding: 2.8rem 3rem 2rem;
+  border-top: 6px solid var(--accent);
+  border-bottom: 2px solid var(--rule-heavy);
+  position: relative;
+}
+.report-header.header-issues { border-top-color: var(--crit-bd); }
+.report-header.header-clean  { border-top-color: var(--low-bd); }
+
+.header-stamp {
+  position: absolute; top: 2.2rem; right: 3rem; text-align: right;
+}
+.header-stamp .stamp-label {
+  font-family: 'Courier New', monospace; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.12em;
+  color: var(--ink-muted); display: block; margin-bottom: 0.15rem;
+}
+.header-stamp .stamp-value { font-family: 'Courier New', monospace; font-size: 0.78rem; color: var(--ink); }
+.header-stamp .stamp-org {
+  display: block; font-size: 0.72rem; font-weight: 700;
+  letter-spacing: 0.06em; color: var(--ink); margin-bottom: 0.6rem;
+}
+
+.report-eyebrow {
+  font-family: 'Courier New', monospace; font-size: 0.7rem;
+  text-transform: uppercase; letter-spacing: 0.2em; color: var(--ink-muted); margin-bottom: 0.5rem;
+}
+.report-title { font-size: 1.9rem; font-weight: normal; letter-spacing: -0.01em; line-height: 1.2; }
+.report-subtitle { font-family: 'Courier New', monospace; font-size: 0.78rem; color: var(--ink-muted); margin-top: 0.5rem; }
+
+/* ── Meta strip ─────────────────────────────────────────────────── */
+.scan-meta {
+  display: flex; flex-wrap: wrap;
+  border-bottom: 2px solid var(--rule);
+}
+.meta-item { padding: 0.9rem 1.5rem; border-right: 1px solid var(--rule); flex: 1 1 auto; min-width: 8rem; }
+.meta-item:last-child { border-right: none; }
+.meta-label {
+  font-family: 'Courier New', monospace; font-size: 0.65rem;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-muted); display: block; margin-bottom: 0.25rem;
+}
+.meta-value { font-family: 'Courier New', monospace; font-size: 0.8rem; word-break: break-all; }
+
+/* ── Extra panels (identity context) ────────────────────────────── */
+.extra-panel {
+  padding: 1.2rem 3rem; border-bottom: 2px solid var(--rule); background: #f4f3f0;
+}
+.extra-panel-eyebrow {
+  font-family: 'Courier New', monospace; font-size: 0.65rem; text-transform: uppercase;
+  letter-spacing: 0.14em; color: var(--ink-muted); margin-bottom: 0.4rem;
+}
+.extra-panel-name {
+  font-size: 1.05rem; font-weight: bold; color: var(--accent); margin-bottom: 0.3rem;
+}
+.extra-panel-meta {
+  font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--ink-muted);
+  display: flex; flex-wrap: wrap; gap: 0 1.6rem; line-height: 1.8;
+}
+.extra-panel-meta span { white-space: nowrap; }
+.extra-panel-meta .full { display: block; white-space: normal; word-break: break-all; }
+
+/* ── Status banner ──────────────────────────────────────────────── */
+.status-banner {
+  padding: 0.6rem 3rem; font-family: 'Courier New', monospace;
+  font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase;
+}
+.status-banner::before { content: '▶  '; }
+.status-banner.issues { background: var(--fail-bg); color: var(--fail-fg); border-bottom: 1px solid var(--fail-bd); }
+.status-banner.clean  { background: var(--pass-bg); color: var(--pass-fg); border-bottom: 1px solid var(--pass-bd); }
+
+/* ── Summary grid ───────────────────────────────────────────────── */
+.summary-section { padding: 2rem 3rem; border-bottom: 2px solid var(--rule); }
+.summary-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 1px; background: var(--rule); border: 1px solid var(--rule);
+}
+.stat-card { background: var(--paper); padding: 1.4rem 0.6rem; text-align: center; }
+.stat-card .stat-number {
+  font-family: 'Georgia', serif; font-size: 2.2rem; font-weight: bold; line-height: 1;
+  display: block; margin-bottom: 0.4rem; color: var(--ink);
+}
+.stat-card .stat-label {
+  font-family: 'Courier New', monospace; font-size: 0.62rem;
+  text-transform: uppercase; letter-spacing: 0.14em; color: var(--ink-muted);
+}
+
+/* stat-card colour variants */
+.stat-card.stat-primary  .stat-number { color: var(--accent); }
+.stat-card.stat-critical .stat-number { color: var(--crit-fg); }
+.stat-card.stat-high     .stat-number { color: var(--high-fg); }
+.stat-card.stat-medium   .stat-number { color: var(--med-fg); }
+.stat-card.stat-low      .stat-number { color: var(--low-fg); }
+.stat-card.stat-info     .stat-number { color: var(--info-fg); }
+.stat-card.stat-blocker  .stat-number { color: var(--blocker-fg); }
+.stat-card.stat-pass     .stat-number { color: var(--pass-fg); }
+.stat-card.stat-fail     .stat-number { color: var(--fail-fg); }
+.stat-card.stat-warn     .stat-number { color: var(--warn-fg); }
+.stat-card.stat-fixable  .stat-number { color: var(--accent); }
+.stat-card.stat-vuln     .stat-number { color: var(--crit-fg); }
+
+/* ── Generic sections ───────────────────────────────────────────── */
+.section { padding: 1.6rem 3rem 2rem; border-bottom: 2px solid var(--rule); }
+.section:last-child { border-bottom: none; }
+.section-title {
+  font-family: 'Courier New', monospace; font-size: 0.65rem;
+  text-transform: uppercase; letter-spacing: 0.2em; color: var(--ink-muted); margin-bottom: 1.4rem;
+}
+
+/* ── Group heading ──────────────────────────────────────────────── */
+.group-heading {
+  display: flex; align-items: baseline; gap: 0.8rem;
+  padding-bottom: 0.4rem; border-bottom: 2px solid var(--rule-heavy);
+  margin-bottom: 0; margin-top: 1.6rem;
+}
+.section-group:first-child .group-heading { margin-top: 0; }
+
+.group-name {
+  font-family: 'Georgia', serif; font-size: 1.05rem; font-weight: bold; color: var(--ink);
+}
+.group-count { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--ink-muted); }
+
+/* group-name severity colours */
+.group-name.sev-critical { color: var(--crit-fg); }
+.group-name.sev-high     { color: var(--high-fg); }
+.group-name.sev-medium   { color: var(--med-fg); }
+.group-name.sev-low      { color: var(--low-fg); }
+.group-name.sev-info     { color: var(--info-fg); }
+.group-name.sev-blocker  { color: var(--blocker-fg); }
+.group-name.sev-unknown  { color: var(--ink-muted); }
+.group-name.state-pass   { color: var(--pass-fg); }
+.group-name.state-fail   { color: var(--fail-fg); }
+.group-name.state-warn   { color: var(--warn-fg); }
+.group-name.state-neutral{ color: var(--neutral-fg); }
+
+/* ── Generic table ──────────────────────────────────────────────── */
+.report-table {
+  width: 100%; border-collapse: collapse; font-size: 0.78rem; border: 1px solid var(--rule);
+  margin-top: 0;
+}
+.report-table th {
+  font-family: 'Courier New', monospace; font-size: 0.62rem;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-muted);
+  padding: 0.55rem 0.75rem; text-align: left;
+  border-bottom: 2px solid var(--rule-heavy); background: #f4f3f0;
+}
+.report-table td {
+  padding: 0.5rem 0.75rem; border-bottom: 1px solid var(--rule); vertical-align: top;
+}
+.report-table tr:last-child td { border-bottom: none; }
+.report-table tr:hover td { background: #f7f6f3; }
+
+/* cell helpers */
+.mono { font-family: 'Courier New', monospace; font-size: 0.78rem; }
+.td-muted { font-family: 'Courier New', monospace; font-size: 0.7rem; color: var(--ink-muted); }
+.td-name  { font-weight: 600; color: var(--accent); }
+.td-file  { font-weight: 600; color: var(--accent); max-width: 14rem; word-break: break-all; }
+.td-msg   { font-size: 0.75rem; line-height: 1.4; }
+.td-desc  { font-size: 0.72rem; line-height: 1.45; }
+.td-nowrap{ white-space: nowrap; }
+
+/* ── Badge ──────────────────────────────────────────────────────── */
+.badge {
+  display: inline-block; padding: 0.15rem 0.5rem;
+  font-family: 'Courier New', monospace; font-size: 0.65rem;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  border: 1px solid; border-radius: 2px; vertical-align: middle; white-space: nowrap;
+}
+
+.badge.sev-critical { background: var(--crit-bg); color: var(--crit-fg); border-color: var(--crit-bd); }
+.badge.sev-high     { background: var(--high-bg); color: var(--high-fg); border-color: var(--high-bd); }
+.badge.sev-medium   { background: var(--med-bg);  color: var(--med-fg);  border-color: var(--med-bd); }
+.badge.sev-low      { background: var(--low-bg);  color: var(--low-fg);  border-color: var(--low-bd); }
+.badge.sev-info     { background: var(--info-bg); color: var(--info-fg); border-color: var(--info-bd); }
+.badge.sev-blocker  { background: var(--blocker-bg); color: var(--blocker-fg); border-color: var(--blocker-bd); }
+.badge.sev-unknown  { background: var(--neutral-bg); color: var(--neutral-fg); border-color: var(--neutral-bd); }
+
+.badge.state-pass    { background: var(--pass-bg);    color: var(--pass-fg);    border-color: var(--pass-bd); }
+.badge.state-fail    { background: var(--fail-bg);    color: var(--fail-fg);    border-color: var(--fail-bd); }
+.badge.state-warn    { background: var(--warn-bg);    color: var(--warn-fg);    border-color: var(--warn-bd); }
+.badge.state-neutral { background: var(--neutral-bg); color: var(--neutral-fg); border-color: var(--neutral-bd); }
+
+/* ── Cards (generic) ────────────────────────────────────────────── */
+.card {
+  border: 1px solid var(--rule); margin-top: 1rem;
+}
+.section-group:first-child .card:first-child { margin-top: 0; }
+.card:first-child { margin-top: 0; }
+
+.card-header {
+  display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+  padding: 0.75rem 1rem; background: #f4f3f0; border-bottom: 1px solid var(--rule);
+}
+.card-body {
+  padding: 0.8rem 1rem;
+}
+.card-tags {
+  display: flex; flex-wrap: wrap; gap: 0.3rem;
+  padding: 0.5rem 1rem; border-top: 1px solid var(--rule); background: #f9f8f5;
+}
+.tag {
+  font-family: 'Courier New', monospace; font-size: 0.65rem; padding: 0.1rem 0.4rem;
+  background: var(--info-bg); color: var(--info-fg); border: 1px solid var(--info-bd);
+}
+
+/* ── Raw section ────────────────────────────────────────────────── */
+.section-raw { }
+
+/* ── Dependency check multi-vuln card ──────────────────────────── */
+.dep-card-name { font-size: 0.88rem; font-family: 'Courier New', monospace; }
+.vuln-entry-head { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem; flex-wrap: wrap; }
+.vuln-name  { font-size: 0.82rem; }
+.vuln-cvss  { font-size: 0.72rem; color: var(--ink-muted); font-family: 'Courier New', monospace; }
+.dep-refs   { font-size: 0.72rem; color: var(--ink-muted); margin-top: 0.4rem; line-height: 1.6; }
+.dep-refs a { color: var(--accent); }
+.vuln-sep   { border: none; border-top: 1px solid var(--rule); margin: 1rem 0; }
+
+/* ── Dependency check markdown body ────────────────────────────── */
+.vuln-desc p    { font-size: 0.8rem; line-height: 1.55; color: var(--ink-muted); margin-bottom: 0.5rem; }
+.vuln-desc p:last-child { margin-bottom: 0; }
+.vuln-desc h3, .vuln-desc h4, .vuln-desc h5 {
+  font-family: 'Georgia', serif; font-size: 0.78rem; font-weight: bold;
+  color: var(--ink); margin: 0.6rem 0 0.2rem;
+}
+.vuln-desc h3:first-child, .vuln-desc h4:first-child, .vuln-desc h5:first-child { margin-top: 0; }
+.vuln-desc strong { font-weight: 700; color: var(--ink); }
+.vuln-desc code   { font-family: 'Courier New', monospace; font-size: 0.75rem; background: #f0ede8; padding: 0.1rem 0.3rem; }
+.vuln-desc a      { color: var(--accent); }
+.vuln-desc ul     { padding-left: 1.2rem; margin-bottom: 0.5rem; }
+.vuln-desc ul:last-child { margin-bottom: 0; }
+.vuln-desc li     { font-size: 0.8rem; line-height: 1.55; color: var(--ink-muted); margin-bottom: 0.15rem; }
+.vuln-desc pre    { background: #f0ede8; border: 1px solid var(--rule); padding: 0.5rem 0.7rem; overflow-x: auto; margin-bottom: 0.5rem; }
+.vuln-desc pre:last-child { margin-bottom: 0; }
+.vuln-desc pre code { background: none; padding: 0; font-size: 0.72rem; line-height: 1.5; }
+
+/* ── Tenable WAS finding output/proof blocks ────────────────────── */
+.finding-output,
+.finding-proof {
+  font-family: 'Courier New', monospace; font-size: 0.72rem;
+  background: #f0eeeb; border-left: 3px solid var(--rule-heavy);
+  padding: 0.5rem 0.8rem; white-space: pre-wrap; word-break: break-all; color: var(--ink);
+  max-height: 12rem; overflow-y: auto; margin-top: 0.6rem;
+}
+.finding-proof { max-height: none; }
+
+.finding-description { font-size: 0.82rem; line-height: 1.5; color: var(--ink-muted); margin-bottom: 0.4rem; white-space: pre-line; }
+.finding-solution     { font-size: 0.82rem; line-height: 1.5; color: var(--ink); white-space: pre-line; }
+.finding-solution strong {
+  font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em;
+  font-family: 'Courier New', monospace; font-weight: 600;
+}
+
+/* ── dep-check CVSS column ──────────────────────────────────────── */
+.td-cvss { font-family: 'Courier New', monospace; font-size: 0.68rem; color: var(--ink-muted); white-space: nowrap; }
+.td-cve  { font-family: 'Courier New', monospace; font-size: 0.7rem; font-weight: bold; }
+.td-cve a { color: inherit; }
+
+/* ── ArgoCD op banner ───────────────────────────────────────────── */
+.op-banner {
+  padding: 0.5rem 3rem; font-family: 'Courier New', monospace;
+  font-size: 0.72rem; letter-spacing: 0.06em; border-bottom: 1px solid var(--rule);
+  display: flex; align-items: center; gap: 0.8rem;
+}
+.op-banner.state-pass    { background: var(--pass-bg);    color: var(--pass-fg);    border-bottom-color: var(--pass-bd); }
+.op-banner.state-fail    { background: var(--fail-bg);    color: var(--fail-fg);    border-bottom-color: var(--fail-bd); }
+.op-banner.state-warn    { background: var(--warn-bg);    color: var(--warn-fg);    border-bottom-color: var(--warn-bd); }
+.op-banner.state-neutral { background: var(--neutral-bg); color: var(--neutral-fg); }
+.op-phase-label {
+  font-weight: bold; text-transform: uppercase; letter-spacing: 0.14em; font-size: 0.65rem;
+  border: 1px solid currentColor; padding: 0.1rem 0.4rem; flex-shrink: 0;
+}
+
+/* ── ArgoCD info panel ──────────────────────────────────────────── */
+.info-panel { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border-bottom: 2px solid var(--rule); }
+.info-block { padding: 1.4rem 3rem; }
+.info-block:first-child { border-right: 1px solid var(--rule-heavy); }
+.info-block-title {
+  font-family: 'Courier New', monospace; font-size: 0.62rem; text-transform: uppercase;
+  letter-spacing: 0.2em; color: var(--ink-muted); margin-bottom: 0.8rem;
+  padding-bottom: 0.3rem; border-bottom: 1px solid var(--rule);
+}
+.info-row { display: flex; gap: 0.6rem; margin-bottom: 0.45rem; align-items: flex-start; }
+.info-row:last-child { margin-bottom: 0; }
+.info-key {
+  font-family: 'Courier New', monospace; font-size: 0.62rem; color: var(--ink-muted);
+  text-transform: uppercase; letter-spacing: 0.08em; width: 70px; flex-shrink: 0; padding-top: 0.05rem;
+}
+.info-val { font-family: 'Courier New', monospace; font-size: 0.75rem; color: var(--ink); word-break: break-all; flex: 1; }
+.info-val.rev { color: var(--accent); }
+
+/* ArgoCD list items (externalURLs, images) */
+.detail-list { list-style: none; }
+.detail-list li {
+  font-family: 'Courier New', monospace; font-size: 0.78rem; padding: 0.25rem 0;
+  border-bottom: 1px solid var(--rule); word-break: break-all;
+}
+.detail-list li:last-child { border-bottom: none; }
+.detail-list li a { color: var(--accent); }
+
+/* ── SBOM main-component panel ──────────────────────────────────── */
+.main-comp-name { font-size: 1.05rem; font-weight: bold; color: var(--accent); margin-bottom: 0.25rem; }
+.main-comp-desc { font-size: 0.78rem; color: var(--ink-muted); margin-bottom: 0.4rem; line-height: 1.5; }
+.main-comp-meta { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--ink-muted); display: flex; flex-wrap: wrap; gap: 0 1.4rem; }
+.main-comp-meta strong { font-weight: 600; color: var(--ink); }
+
+/* ── Credits (dep-check) ────────────────────────────────────────── */
+.credit-source {
+  font-family: 'Courier New', monospace; font-size: 0.7rem; font-weight: bold;
+  text-transform: uppercase; letter-spacing: 0.1em; color: var(--accent); display: block; margin-bottom: 0.2rem;
+}
+.credit-text { font-family: 'Courier New', monospace; font-size: 0.68rem; color: var(--ink-muted); line-height: 1.4; }
+
+/* ── Empty message ──────────────────────────────────────────────── */
+.empty-msg {
+  font-family: 'Courier New', monospace; font-size: 0.82rem; color: var(--ink-muted);
+  text-align: center; padding: 2rem 0;
+}
+
+/* ── Footer ─────────────────────────────────────────────────────── */
+.report-footer {
+  padding: 1rem 3rem; border-top: 2px solid var(--rule);
+  display: flex; justify-content: space-between; align-items: center;
+}
+.footer-total { font-family: 'Courier New', monospace; font-size: 0.72rem; color: var(--ink-muted); }
+.footer-org   { font-family: 'Courier New', monospace; font-size: 0.7rem; font-weight: 700; color: var(--ink-muted); }
+.footer-brand { font-family: 'Courier New', monospace; font-size: 0.68rem; color: var(--rule-heavy); letter-spacing: 0.08em; }
+
+/* ── Print ──────────────────────────────────────────────────────── */
+@media print {
+  html { font-size: 11px; background: white; }
+  body { max-width: none; margin: 0; box-shadow: none; background: white; }
+  .section-group { page-break-inside: avoid; }
+  .group-heading  { page-break-after: avoid; }
+  .card           { page-break-inside: avoid; }
+  .card-header    { page-break-after: avoid; }
+}

@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ .Title }}</title>
+  <style>{{ .CSS }}</style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="report-header header-{{ .Status }}">
+    <div class="header-stamp">
+      {{ if .OrgName }}<span class="stamp-org">{{ .OrgName }}</span>{{ end }}
+      <span class="stamp-label">Generated</span>
+      <span class="stamp-value">{{ .GeneratedAt }}</span>
+    </div>
+    <p class="report-eyebrow">{{ .Eyebrow }}</p>
+    <h1 class="report-title">{{ .Title }}</h1>
+    {{ if .Subtitle }}<p class="report-subtitle">{{ .Subtitle }}</p>{{ end }}
+  </header>
+
+  <!-- Meta strip -->
+  {{ if .Meta }}
+  <div class="scan-meta">
+    {{ range .Meta }}
+    <div class="meta-item">
+      <span class="meta-label">{{ .Label }}</span>
+      <span class="meta-value">{{ if .Value }}{{ .Value }}{{ else }}&mdash;{{ end }}</span>
+    </div>
+    {{ end }}
+  </div>
+  {{ end }}
+
+  <!-- Extra panels: identity/context info, shown even with --summary-only -->
+  {{ range .ExtraPanels }}{{ . }}{{ end }}
+
+  <!-- Status banner -->
+  <div class="status-banner {{ .Status }}">{{ .StatusLine }}</div>
+
+  <!-- Summary grid -->
+  <section class="summary-section">
+    <div class="summary-grid">
+      {{ range .Summary }}
+      <div class="stat-card{{ if .Variant }} stat-{{ .Variant }}{{ end }}">
+        <span class="stat-number">{{ .Number }}</span>
+        <span class="stat-label">{{ .Label }}</span>
+      </div>
+      {{ end }}
+    </div>
+  </section>
+
+  <!-- Detail sections — skipped when --summary-only -->
+  {{ if not .SummaryOnly }}
+  {{ range .Sections }}
+  {{ if eq .Kind "table"  }}{{ template "section_table"  . }}{{ end }}
+  {{ if eq .Kind "cards"  }}{{ template "section_cards"  . }}{{ end }}
+  {{ if eq .Kind "raw"    }}{{ template "section_raw"    . }}{{ end }}
+  {{ end }}
+  {{ end }}
+
+  <!-- Footer -->
+  <footer class="report-footer">
+    <span class="footer-total">{{ .Footer.Total }}</span>
+    {{ if .OrgName }}<span class="footer-org">{{ .OrgName }}</span>{{ end }}
+    <span class="footer-brand">{{ .Footer.Brand }}</span>
+  </footer>
+
+</body>
+</html>
+
+{{ define "section_table" }}
+<section class="section">
+  {{ if .Title }}<div class="section-title">{{ .Title }}</div>{{ end }}
+  {{ if .Groups }}
+  {{ range .Groups }}
+  <div class="section-group">
+    {{ if .Name }}
+    <div class="group-heading{{ if .Class }} {{ .Class }}{{ end }}">
+      <span class="group-name{{ if .Class }} {{ .Class }}{{ end }}">{{ .Name }}</span>
+      {{ if .Count }}<span class="group-count">{{ .Count }}</span>{{ end }}
+    </div>
+    {{ end }}
+    {{ if .Rows }}
+    <table class="report-table">
+      {{ if .Columns }}<thead><tr>{{ range .Columns }}<th>{{ . }}</th>{{ end }}</tr></thead>{{ end }}
+      <tbody>{{ range .Rows }}<tr>{{ range . }}<td>{{ . }}</td>{{ end }}</tr>{{ end }}</tbody>
+    </table>
+    {{ end }}
+  </div>
+  {{ end }}
+  {{ else }}
+  <p class="empty-msg">{{ if .Empty }}{{ .Empty }}{{ else }}No data.{{ end }}</p>
+  {{ end }}
+</section>
+{{ end }}
+
+{{ define "section_cards" }}
+<section class="section">
+  {{ if .Title }}<div class="section-title">{{ .Title }}</div>{{ end }}
+  {{ if .Groups }}
+  {{ range .Groups }}
+  <div class="section-group">
+    {{ if .Name }}
+    <div class="group-heading{{ if .Class }} {{ .Class }}{{ end }}">
+      <span class="group-name{{ if .Class }} {{ .Class }}{{ end }}">{{ .Name }}</span>
+      {{ if .Count }}<span class="group-count">{{ .Count }}</span>{{ end }}
+    </div>
+    {{ end }}
+    {{ range .Cards }}
+    <div class="card">
+      {{ if .Header }}<div class="card-header">{{ .Header }}</div>{{ end }}
+      {{ if .Body }}<div class="card-body">{{ .Body }}</div>{{ end }}
+      {{ if .Tags }}
+      <div class="card-tags">{{ range .Tags }}<span class="tag">{{ . }}</span>{{ end }}</div>
+      {{ end }}
+    </div>
+    {{ end }}
+  </div>
+  {{ end }}
+  {{ else }}
+  <p class="empty-msg">{{ if .Empty }}{{ .Empty }}{{ else }}No data.{{ end }}</p>
+  {{ end }}
+</section>
+{{ end }}
+
+{{ define "section_raw" }}
+<section class="section section-raw">
+  {{ if .Title }}<div class="section-title">{{ .Title }}</div>{{ end }}
+  {{ .HTML }}
+</section>
+{{ end }}

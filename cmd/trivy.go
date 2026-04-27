@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "embed"
 	"encoding/json"
 	"fmt"
 	"html/template"
@@ -10,23 +9,13 @@ import (
 	"time"
 )
 
-//go:embed templates/trivy.html
-var trivyTemplate string
-
 func init() {
 	RegisterSource("trivy", &ReportSource{
 		DefaultTitle: "Trivy Vulnerability Report",
-		Template:     trivyTemplate,
-		FuncMap: template.FuncMap{
-			"trivySevClass":    trivySevClass,
-			"trivySevLabel":    trivySevLabel,
-			"trivyJoinLicenses": trivyJoinLicenses,
-			"trivyShortHash":   trivyShortHash,
-		},
-		Parse: func(data []byte, title string) (any, error) {
+		Parse: func(data []byte, title string) (ReportData, error) {
 			var report TrivyReport
 			if err := json.Unmarshal(data, &report); err != nil {
-				return nil, err
+				return ReportData{}, err
 			}
 			return BuildTrivyReportData(report, title), nil
 		},
@@ -92,9 +81,9 @@ type TrivyReport struct {
 			Family string `json:"Family"`
 			Name   string `json:"Name"`
 		} `json:"OS"`
-		ImageID     string      `json:"ImageID"`
-		RepoTags    []string    `json:"RepoTags"`
-		RepoDigests []string    `json:"RepoDigests"`
+		ImageID     string       `json:"ImageID"`
+		RepoTags    []string     `json:"RepoTags"`
+		RepoDigests []string     `json:"RepoDigests"`
 		Layers      []TrivyLayer `json:"Layers"`
 		ImageConfig struct {
 			Architecture string `json:"architecture"`
@@ -108,116 +97,55 @@ type TrivyReport struct {
 	Results []TrivyResult `json:"Results"`
 }
 
-// ── Report types ─────────────────────────────────────────────────
-
-type TrivySeverityGroup struct {
-	Severity string
-	Vulns    []TrivyVulnerability
-}
-
-type TrivyPackageGroup struct {
-	Target   string
-	Type     string
-	Class    string
-	Packages []TrivyPackage
-}
-
-type TrivyImageDetails struct {
-	Size         string
-	Architecture string
-	BuiltAt      string
-	ImageID      string
-	RepoDigest   string
-	Maintainer   string
-	Source       string
-	Revision     string
-	LayerCount   int
-}
-
-type TrivySummary struct {
-	Total    int
-	Critical int
-	High     int
-	Medium   int
-	Low      int
-	Unknown  int
-	Fixable  int
-	Targets  int
-	Packages int
-}
-
-type TrivyReportData struct {
-	Title          string
-	GeneratedAt    string
-	ArtifactName   string
-	ArtifactType   string
-	TrivyVersion   string
-	CreatedAt      string
-	OS             string
-	ImageID        string
-	ImageDetails   TrivyImageDetails
-	Summary        TrivySummary
-	PackageGroups  []TrivyPackageGroup
-	SeverityGroups []TrivySeverityGroup
-	HasIssues      bool
-}
+// ── Adapter ──────────────────────────────────────────────────────
 
 var trivySeverityOrder = []string{"CRITICAL", "HIGH", "MEDIUM", "LOW", "UNKNOWN"}
 
-
-func BuildTrivyReportData(report TrivyReport, title string) TrivyReportData {
-	summary := TrivySummary{Targets: len(report.Results)}
+func BuildTrivyReportData(report TrivyReport, title string) ReportData {
 	sevMap := make(map[string][]TrivyVulnerability)
-	var packageGroups []TrivyPackageGroup
+	var totalVulns, critical, high, medium, low, unknown, fixable, totalPkgs int
+
+	type pkgGroup struct {
+		target string
+		typ    string
+		pkgs   []TrivyPackage
+	}
+	var pkgGroups []pkgGroup
 
 	for _, result := range report.Results {
 		for _, v := range result.Vulnerabilities {
 			sev := strings.ToUpper(v.Severity)
 			sevMap[sev] = append(sevMap[sev], v)
-			summary.Total++
-
+			totalVulns++
 			switch sev {
 			case "CRITICAL":
-				summary.Critical++
+				critical++
 			case "HIGH":
-				summary.High++
+				high++
 			case "MEDIUM":
-				summary.Medium++
+				medium++
 			case "LOW":
-				summary.Low++
+				low++
 			default:
-				summary.Unknown++
+				unknown++
 			}
-
 			if v.FixedVersion != "" {
-				summary.Fixable++
+				fixable++
 			}
 		}
-
 		if len(result.Packages) > 0 {
 			pkgs := make([]TrivyPackage, len(result.Packages))
 			copy(pkgs, result.Packages)
-			sort.Slice(pkgs, func(i, j int) bool {
-				return pkgs[i].Name < pkgs[j].Name
-			})
-			summary.Packages += len(pkgs)
-			packageGroups = append(packageGroups, TrivyPackageGroup{
-				Target:   result.Target,
-				Type:     result.Type,
-				Class:    result.Class,
-				Packages: pkgs,
-			})
+			sort.Slice(pkgs, func(i, j int) bool { return pkgs[i].Name < pkgs[j].Name })
+			totalPkgs += len(pkgs)
+			pkgGroups = append(pkgGroups, pkgGroup{target: result.Target, typ: result.Type, pkgs: pkgs})
 		}
 	}
 
-	severityGroups := make([]TrivySeverityGroup, 0, len(sevMap))
-	for _, sev := range trivySeverityOrder {
-		if vulns, ok := sevMap[sev]; ok {
-			sort.Slice(vulns, func(i, j int) bool {
-				return vulns[i].PkgName < vulns[j].PkgName
-			})
-			severityGroups = append(severityGroups, TrivySeverityGroup{Severity: sev, Vulns: vulns})
-		}
+	hasIssues := totalVulns > 0
+	statusLine := "No vulnerabilities found"
+	if hasIssues {
+		statusLine = fmt.Sprintf("%s · %d critical, %d high, %d fixable", pluralise(totalVulns, "vulnerability", "vulnerabilities"), critical, high, fixable)
 	}
 
 	os := ""
@@ -233,40 +161,174 @@ func BuildTrivyReportData(report TrivyReport, title string) TrivyReportData {
 	if len(revision) > 7 {
 		revision = revision[:7]
 	}
-
 	repoDigest := ""
 	if len(report.Metadata.RepoDigests) > 0 {
 		repoDigest = report.Metadata.RepoDigests[0]
 	}
 
-	imageDetails := TrivyImageDetails{
-		Size:         trivyFormatSize(report.Metadata.Size),
-		Architecture: report.Metadata.ImageConfig.Architecture,
-		BuiltAt:      trivyFormatTimestamp(report.Metadata.ImageConfig.Created),
-		ImageID:      trivyShortHash(report.Metadata.ImageID),
-		RepoDigest:   repoDigest,
-		Maintainer:   labels["maintainer"],
-		Source:       labels["org.opencontainers.image.source"],
-		Revision:     revision,
-		LayerCount:   len(report.Metadata.Layers),
+	// Image details extra panel
+	imagePanel := renderTrivyImagePanel(
+		report.ArtifactName, report.Metadata.ImageID,
+		trivyFormatSize(report.Metadata.Size),
+		report.Metadata.ImageConfig.Architecture,
+		trivyFormatTimestamp(report.Metadata.ImageConfig.Created),
+		os, repoDigest, labels["maintainer"],
+		labels["org.opencontainers.image.source"],
+		revision, len(report.Metadata.Layers),
+	)
+
+	// Vulnerability sections
+	vulnCols := []string{"CVE", "Package", "Installed", "Fixed", "Status", "Description"}
+	var vulnGroups []SectionGroup
+	for _, sev := range trivySeverityOrder {
+		vulns, ok := sevMap[sev]
+		if !ok {
+			continue
+		}
+		sort.Slice(vulns, func(i, j int) bool { return vulns[i].PkgName < vulns[j].PkgName })
+		cls, lbl := trivySevCanonical(sev)
+		rows := make([][]template.HTML, 0, len(vulns))
+		for _, v := range vulns {
+			cveCell := template.HTML(template.HTMLEscapeString(v.VulnerabilityID))
+			if v.PrimaryURL != "" {
+				cveCell = LinkHTML(v.PrimaryURL, v.VulnerabilityID)
+			}
+			fixCell := template.HTML(template.HTMLEscapeString(v.FixedVersion))
+			if v.FixedVersion == "" {
+				fixCell = template.HTML(`<em style="opacity:.5">—</em>`)
+			}
+			rows = append(rows, []template.HTML{
+				template.HTML(fmt.Sprintf(`<span class="td-cve">%s</span>`, cveCell)),
+				template.HTML(fmt.Sprintf(`<strong>%s</strong>`, template.HTMLEscapeString(v.PkgName))),
+				MonoHTML(v.InstalledVersion),
+				fixCell,
+				MonoHTML(v.Status),
+				template.HTML(template.HTMLEscapeString(v.Description)),
+			})
+		}
+		vulnGroups = append(vulnGroups, SectionGroup{
+			Name:    lbl,
+			Count:   pluralise(len(vulns), "vulnerability", "vulnerabilities"),
+			Class:   cls,
+			Columns: vulnCols,
+			Rows:    rows,
+		})
 	}
 
-	createdAt := trivyFormatTimestamp(report.CreatedAt)
+	// Package sections
+	pkgCols := []string{"Package", "Version", "Arch", "Licenses", "Layer"}
+	var pkgSectionGroups []SectionGroup
+	for _, pg := range pkgGroups {
+		rows := make([][]template.HTML, 0, len(pg.pkgs))
+		for _, p := range pg.pkgs {
+			layer := ShortHash(p.Layer.DiffID)
+			rows = append(rows, []template.HTML{
+				template.HTML(fmt.Sprintf(`<strong>%s</strong>`, template.HTMLEscapeString(p.Name))),
+				MonoHTML(p.Version),
+				template.HTML(template.HTMLEscapeString(p.Arch)),
+				template.HTML(template.HTMLEscapeString(strings.Join(p.Licenses, ", "))),
+				MonoHTML(layer),
+			})
+		}
+		label := pg.target
+		if pg.typ != "" {
+			label += " (" + pg.typ + ")"
+		}
+		pkgSectionGroups = append(pkgSectionGroups, SectionGroup{
+			Name:    label,
+			Count:   pluralise(len(pg.pkgs), "package", "packages"),
+			Columns: pkgCols,
+			Rows:    rows,
+		})
+	}
 
-	return TrivyReportData{
-		Title:          title,
-		GeneratedAt:    time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
-		ArtifactName:   report.ArtifactName,
-		ArtifactType:   report.ArtifactType,
-		TrivyVersion:   report.Trivy.Version,
-		CreatedAt:      createdAt,
-		OS:             os,
-		ImageID:        report.Metadata.ImageID,
-		ImageDetails:   imageDetails,
-		Summary:        summary,
-		PackageGroups:  packageGroups,
-		SeverityGroups: severityGroups,
-		HasIssues:      summary.Total > 0,
+	sections := []Section{
+		{Kind: "table", Title: "Vulnerabilities by Severity", Groups: vulnGroups, Empty: "No vulnerabilities found."},
+	}
+	if len(pkgSectionGroups) > 0 {
+		sections = append(sections, Section{
+			Kind:   "table",
+			Title:  "Installed Packages",
+			Groups: pkgSectionGroups,
+			Empty:  "No package data.",
+		})
+	}
+
+	return ReportData{
+		Title:       title,
+		Eyebrow:     "Vulnerability Scan",
+		Subtitle:    report.ArtifactName,
+		GeneratedAt: time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
+		Status:      statusFromBool(hasIssues),
+		StatusLine:  statusLine,
+		Meta: []KV{
+			{Label: "Artifact Type", Value: report.ArtifactType},
+			{Label: "OS", Value: os},
+			{Label: "Scan Date", Value: trivyFormatTimestamp(report.CreatedAt)},
+			{Label: "Trivy Version", Value: report.Trivy.Version},
+		},
+		ExtraPanels: []template.HTML{imagePanel},
+		Summary: []StatCard{
+			{Number: fmt.Sprintf("%d", totalVulns), Label: "Total", Variant: "primary"},
+			{Number: fmt.Sprintf("%d", critical), Label: "Critical", Variant: "critical"},
+			{Number: fmt.Sprintf("%d", high), Label: "High", Variant: "high"},
+			{Number: fmt.Sprintf("%d", medium), Label: "Medium", Variant: "medium"},
+			{Number: fmt.Sprintf("%d", low), Label: "Low", Variant: "low"},
+			{Number: fmt.Sprintf("%d", fixable), Label: "Fixable", Variant: "fixable"},
+		},
+		Sections: sections,
+		Footer: FooterInfo{
+			Total: pluralise(totalVulns, "vulnerability", "vulnerabilities") + " · " + pluralise(totalPkgs, "package", "packages"),
+			Brand: "devops-reporter · trivy",
+		},
+	}
+}
+
+func renderTrivyImagePanel(name, imageID, size, arch, builtAt, osStr, repoDigest, maintainer, source, revision string, layerCount int) template.HTML {
+	var meta strings.Builder
+	writeMeta := func(label, val string) {
+		if val == "" {
+			return
+		}
+		meta.WriteString(fmt.Sprintf(`<span><strong>%s</strong> %s</span>`,
+			template.HTMLEscapeString(label), template.HTMLEscapeString(val)))
+	}
+	writeMeta("Size", size)
+	writeMeta("Arch", arch)
+	writeMeta("Built", builtAt)
+	writeMeta("OS", osStr)
+	writeMeta("ID", ShortHash(imageID))
+	writeMeta("Layers", fmt.Sprintf("%d", layerCount))
+	writeMeta("Revision", revision)
+	writeMeta("Maintainer", maintainer)
+	if repoDigest != "" {
+		meta.WriteString(fmt.Sprintf(`<span class="full"><strong>Digest</strong> %s</span>`, template.HTMLEscapeString(repoDigest)))
+	}
+	if source != "" {
+		meta.WriteString(fmt.Sprintf(`<span class="full"><strong>Source</strong> %s</span>`, template.HTMLEscapeString(source)))
+	}
+
+	return template.HTML(fmt.Sprintf(`<div class="extra-panel">
+  <div class="extra-panel-eyebrow">Image Details</div>
+  <div class="extra-panel-name">%s</div>
+  <div class="extra-panel-meta">%s</div>
+</div>`, template.HTMLEscapeString(name), meta.String()))
+}
+
+// ── Helpers ──────────────────────────────────────────────────────
+
+func trivySevCanonical(sev string) (cssClass, label string) {
+	switch strings.ToUpper(sev) {
+	case "CRITICAL":
+		return "sev-critical", "Critical"
+	case "HIGH":
+		return "sev-high", "High"
+	case "MEDIUM":
+		return "sev-medium", "Medium"
+	case "LOW":
+		return "sev-low", "Low"
+	default:
+		return "sev-unknown", "Unknown"
 	}
 }
 
@@ -297,50 +359,4 @@ func trivyFormatSize(bytes int64) string {
 		return fmt.Sprintf("%.1f GB", float64(bytes)/float64(gb))
 	}
 	return fmt.Sprintf("%.1f MB", float64(bytes)/float64(mb))
-}
-
-func trivyShortHash(h string) string {
-	// Strip "sha256:" prefix for display
-	h = strings.TrimPrefix(h, "sha256:")
-	if len(h) <= 19 {
-		return h
-	}
-	return h[:19] + "…"
-}
-
-func trivyJoinLicenses(ls []string) string {
-	if len(ls) == 0 {
-		return ""
-	}
-	return strings.Join(ls, ", ")
-}
-
-func trivySevClass(severity string) string {
-	switch strings.ToUpper(severity) {
-	case "CRITICAL":
-		return "sev-critical"
-	case "HIGH":
-		return "sev-high"
-	case "MEDIUM":
-		return "sev-medium"
-	case "LOW":
-		return "sev-low"
-	default:
-		return "sev-unknown"
-	}
-}
-
-func trivySevLabel(severity string) string {
-	switch strings.ToUpper(severity) {
-	case "CRITICAL":
-		return "Critical"
-	case "HIGH":
-		return "High"
-	case "MEDIUM":
-		return "Medium"
-	case "LOW":
-		return "Low"
-	default:
-		return "Unknown"
-	}
 }

@@ -151,7 +151,7 @@
         },
         {
           "created": "2026-04-23T04:16:39Z",
-          "created_by": "LABEL maintainer=andhika.pradana@asdp.id",
+          "created_by": "LABEL maintainer=user@example.com",
           "comment": "buildkit.dockerfile.v0",
           "empty_layer": true
         },
@@ -207,10 +207,10 @@
           "ACME_VERSION=0.3.1"
         ],
         "Labels": {
-          "maintainer": "andhika.pradana@asdp.id",
+          "maintainer": "user@example.com",
           "org.opencontainers.image.created": "2026-04-23T15:38:05+07:00",
           "org.opencontainers.image.revision": "ad0992aeef6dc78baad64fc582c8af4ce941bdc5",
-          "org.opencontainers.image.source": "https://git.devops.asdp.id/itops/kustomizer"
+          "org.opencontainers.image.source": "https://git.devops.example.com/itops/kustomizer"
         },
         "WorkingDir": "/",
         "ExposedPorts": {

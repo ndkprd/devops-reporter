@@ -1,31 +1,21 @@
 package main
 
 import (
-	_ "embed"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"sort"
 	"strings"
 	"time"
 )
 
-//go:embed templates/sbom-cdx.html
-var sbomCdxTemplate string
-
 func init() {
 	RegisterSource("cyclonedx", &ReportSource{
 		DefaultTitle: "Software Bill of Materials",
-		Template:     sbomCdxTemplate,
-		FuncMap: template.FuncMap{
-			"cdxEcosystem": cdxEcosystemFromPURL,
-			"cdxLicense":   cdxLicenseString,
-			"cdxShortPurl": cdxShortPurl,
-			"cdxShortHash": cdxShortHash,
-		},
-		Parse: func(data []byte, title string) (any, error) {
+		Parse: func(data []byte, title string) (ReportData, error) {
 			var sbom CdxSBOM
 			if err := json.Unmarshal(data, &sbom); err != nil {
-				return nil, err
+				return ReportData{}, err
 			}
 			return BuildCdxReportData(sbom, title), nil
 		},
@@ -84,95 +74,39 @@ type CdxSBOM struct {
 	Components []CdxComponent `json:"components"`
 }
 
-// ── Report types ─────────────────────────────────────────────────
-
-type CdxEcosystemGroup struct {
-	Ecosystem  string
-	Components []CdxComponent
-}
-
-type CdxSummary struct {
-	Total          int
-	Libraries      int
-	Applications   int
-	Unlicensed     int
-	UniqueLicenses int
-	Ecosystems     int
-}
-
-type CdxReportData struct {
-	Title         string
-	GeneratedAt   string
-	BOMFormat     string
-	SpecVersion   string
-	SerialNumber  string
-	BOMVersion    int
-	CreatedAt     string
-	Lifecycle     string
-	Tool          string
-	MainComponent CdxComponent
-	MainLicense   string
-	Summary       CdxSummary
-	Groups        []CdxEcosystemGroup
-	HasIssues     bool
-}
+// ── Adapter ──────────────────────────────────────────────────────
 
 var cdxEcosystemOrder = []string{"npm", "pypi", "maven", "gem", "cargo", "golang", "nuget", "composer", "other"}
 
-func BuildCdxReportData(sbom CdxSBOM, title string) CdxReportData {
+func BuildCdxReportData(sbom CdxSBOM, title string) ReportData {
 	groupMap := make(map[string][]CdxComponent)
 	licenseSet := make(map[string]bool)
 
-	summary := CdxSummary{Total: len(sbom.Components)}
+	total := len(sbom.Components)
+	var libraries, applications, unlicensed int
 
 	for _, c := range sbom.Components {
 		eco := cdxEcosystemFromPURL(c.PURL)
 		groupMap[eco] = append(groupMap[eco], c)
-
 		switch c.Type {
 		case "library":
-			summary.Libraries++
+			libraries++
 		case "application":
-			summary.Applications++
+			applications++
 		}
-
 		lic := cdxLicenseString(c.Licenses)
 		if lic == "" {
-			summary.Unlicensed++
+			unlicensed++
 		} else {
 			licenseSet[lic] = true
 		}
 	}
 
-	summary.UniqueLicenses = len(licenseSet)
-	summary.Ecosystems = len(groupMap)
-
-	groups := make([]CdxEcosystemGroup, 0, len(groupMap))
-	for _, eco := range cdxEcosystemOrder {
-		if comps, ok := groupMap[eco]; ok {
-			sort.Slice(comps, func(i, j int) bool {
-				return comps[i].Name < comps[j].Name
-			})
-			groups = append(groups, CdxEcosystemGroup{Ecosystem: eco, Components: comps})
-		}
+	hasIssues := unlicensed > 0
+	statusLine := "All components licensed"
+	if hasIssues {
+		statusLine = fmt.Sprintf("%s without license information", pluralise(unlicensed, "component", "components"))
 	}
-
-	// any ecosystems not in the canonical order go last (under "other")
-	for eco, comps := range groupMap {
-		known := false
-		for _, k := range cdxEcosystemOrder {
-			if k == eco {
-				known = true
-				break
-			}
-		}
-		if !known {
-			sort.Slice(comps, func(i, j int) bool { return comps[i].Name < comps[j].Name })
-			groups = append(groups, CdxEcosystemGroup{Ecosystem: eco, Components: comps})
-		}
-	}
-
-	createdAt := cdxFormatTimestamp(sbom.Metadata.Timestamp)
 
 	tool := ""
 	if len(sbom.Metadata.Tools.Components) > 0 {
@@ -191,23 +125,139 @@ func BuildCdxReportData(sbom CdxSBOM, title string) CdxReportData {
 		}
 	}
 
-	return CdxReportData{
-		Title:         title,
-		GeneratedAt:   time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
-		BOMFormat:     sbom.BOMFormat,
-		SpecVersion:   sbom.SpecVersion,
-		SerialNumber:  sbom.SerialNumber,
-		BOMVersion:    sbom.Version,
-		CreatedAt:     createdAt,
-		Lifecycle:     strings.Join(lifecycles, ", "),
-		Tool:          tool,
-		MainComponent: sbom.Metadata.Component,
-		MainLicense:   cdxLicenseString(sbom.Metadata.Component.Licenses),
-		Summary:       summary,
-		Groups:        groups,
-		HasIssues:     summary.Unlicensed > 0,
+	main := sbom.Metadata.Component
+	mainLicense := cdxLicenseString(main.Licenses)
+
+	// Extra panel: main component metadata
+	mainPanelHTML := renderCdxMainComponent(main, mainLicense)
+
+	// Build ecosystem groups
+	cols := []string{"Component", "Version", "Type", "License", "PURL"}
+	var groups []SectionGroup
+
+	seen := make(map[string]bool)
+	for _, eco := range cdxEcosystemOrder {
+		comps, ok := groupMap[eco]
+		if !ok {
+			continue
+		}
+		seen[eco] = true
+		sort.Slice(comps, func(i, j int) bool { return comps[i].Name < comps[j].Name })
+		groups = append(groups, cdxEcosystemGroup(eco, comps, cols))
+	}
+	// remaining ecosystems not in the canonical order
+	remaining := make([]string, 0)
+	for eco := range groupMap {
+		if !seen[eco] {
+			remaining = append(remaining, eco)
+		}
+	}
+	sort.Strings(remaining)
+	for _, eco := range remaining {
+		comps := groupMap[eco]
+		sort.Slice(comps, func(i, j int) bool { return comps[i].Name < comps[j].Name })
+		groups = append(groups, cdxEcosystemGroup(eco, comps, cols))
+	}
+
+	createdAt := cdxFormatTimestamp(sbom.Metadata.Timestamp)
+
+	return ReportData{
+		Title:       title,
+		Eyebrow:     "SBOM Report",
+		Subtitle:    fmt.Sprintf("%s · %d ecosystems · %d unique licenses", pluralise(total, "component", "components"), len(groupMap), len(licenseSet)),
+		GeneratedAt: time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
+		Status:      statusFromBool(hasIssues),
+		StatusLine:  statusLine,
+		Meta: []KV{
+			{Label: "BOM Format", Value: sbom.BOMFormat + " " + sbom.SpecVersion},
+			{Label: "Created At", Value: createdAt},
+			{Label: "Lifecycle", Value: strings.Join(lifecycles, ", ")},
+			{Label: "Generator", Value: tool},
+			{Label: "BOM Version", Value: fmt.Sprintf("%d", sbom.Version)},
+			{Label: "Serial Number", Value: sbom.SerialNumber},
+		},
+		ExtraPanels: []template.HTML{mainPanelHTML},
+		Summary: []StatCard{
+			{Number: fmt.Sprintf("%d", total), Label: "Total", Variant: "primary"},
+			{Number: fmt.Sprintf("%d", libraries), Label: "Libraries", Variant: "info"},
+			{Number: fmt.Sprintf("%d", applications), Label: "Apps", Variant: "info"},
+			{Number: fmt.Sprintf("%d", len(licenseSet)), Label: "Licenses", Variant: "pass"},
+			{Number: fmt.Sprintf("%d", unlicensed), Label: "Unlicensed", Variant: "warn"},
+			{Number: fmt.Sprintf("%d", len(groupMap)), Label: "Ecosystems", Variant: "primary"},
+		},
+		Sections: []Section{
+			{Kind: "table", Title: "Components by Ecosystem", Groups: groups, Empty: "No components in BOM."},
+		},
+		Footer: FooterInfo{
+			Total: pluralise(total, "component", "components"),
+			Brand: "devops-reporter · cyclonedx",
+		},
 	}
 }
+
+func cdxEcosystemGroup(eco string, comps []CdxComponent, cols []string) SectionGroup {
+	rows := make([][]template.HTML, 0, len(comps))
+	for _, c := range comps {
+		lic := cdxLicenseString(c.Licenses)
+		licCell := template.HTML(template.HTMLEscapeString(lic))
+		if lic == "" {
+			licCell = template.HTML(`<em style="opacity:.5">—</em>`)
+		}
+		name := c.Name
+		if c.Group != "" {
+			name = c.Group + "/" + c.Name
+		}
+		rows = append(rows, []template.HTML{
+			template.HTML(fmt.Sprintf(`<strong>%s</strong>`, template.HTMLEscapeString(name))),
+			MonoHTML(c.Version),
+			template.HTML(template.HTMLEscapeString(c.Type)),
+			licCell,
+			MonoHTML(cdxShortPurl(c.PURL)),
+		})
+	}
+	return SectionGroup{
+		Name:    eco,
+		Count:   pluralise(len(comps), "component", "components"),
+		Columns: cols,
+		Rows:    rows,
+	}
+}
+
+func renderCdxMainComponent(c CdxComponent, license string) template.HTML {
+	name := c.Name
+	if c.Group != "" {
+		name = c.Group + "/" + c.Name
+	}
+	ver := ""
+	if c.Version != "" {
+		ver = fmt.Sprintf(` <span style="font-weight:400;opacity:.7">v%s</span>`, template.HTMLEscapeString(c.Version))
+	}
+
+	var meta strings.Builder
+	if c.Type != "" {
+		meta.WriteString(fmt.Sprintf(`<span><strong>Type</strong> %s</span>`, template.HTMLEscapeString(c.Type)))
+	}
+	if license != "" {
+		meta.WriteString(fmt.Sprintf(`<span><strong>License</strong> %s</span>`, template.HTMLEscapeString(license)))
+	}
+	if c.PURL != "" {
+		meta.WriteString(fmt.Sprintf(`<span><strong>PURL</strong> %s</span>`, template.HTMLEscapeString(cdxShortPurl(c.PURL))))
+	}
+
+	desc := ""
+	if c.Description != "" {
+		desc = fmt.Sprintf(`<div class="main-comp-desc">%s</div>`, template.HTMLEscapeString(c.Description))
+	}
+
+	return template.HTML(fmt.Sprintf(`<div class="extra-panel">
+  <div class="extra-panel-eyebrow">Described Application</div>
+  <div class="main-comp-name">%s%s</div>
+  %s
+  <div class="main-comp-meta">%s</div>
+</div>`, template.HTMLEscapeString(name), ver, desc, meta.String()))
+}
+
+// ── Helpers ──────────────────────────────────────────────────────
 
 func cdxFormatTimestamp(s string) string {
 	layouts := []string{
@@ -261,11 +311,4 @@ func cdxShortPurl(purl string) string {
 		return purl
 	}
 	return rest[slash+1:]
-}
-
-func cdxShortHash(h string) string {
-	if len(h) <= 12 {
-		return h
-	}
-	return h[:12] + "…"
 }

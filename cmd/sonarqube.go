@@ -1,33 +1,21 @@
 package main
 
 import (
-	_ "embed"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"sort"
 	"strings"
 	"time"
 )
 
-//go:embed templates/sonarqube.html
-var sonarqubeTemplate string
-
 func init() {
 	RegisterSource("sonarqube", &ReportSource{
 		DefaultTitle: "SonarQube Analysis Report",
-		Template:     sonarqubeTemplate,
-		FuncMap: template.FuncMap{
-			"sqSeverityClass": sqSeverityClass,
-			"sqSeverityLabel": sqSeverityLabel,
-			"sqTypeClass":     sqTypeClass,
-			"sqTypeLabel":     sqTypeLabel,
-			"sqFileFromComp":  sqFileFromComp,
-			"sqRuleLang":      sqRuleLang,
-		},
-		Parse: func(data []byte, title string) (any, error) {
+		Parse: func(data []byte, title string) (ReportData, error) {
 			var report SonarQubeReport
 			if err := json.Unmarshal(data, &report); err != nil {
-				return nil, err
+				return ReportData{}, err
 			}
 			return BuildSonarQubeReportData(report, title), nil
 		},
@@ -63,105 +51,126 @@ type SonarQubeReport struct {
 	Issues []SonarQubeIssue `json:"issues"`
 }
 
-// ── Report types ─────────────────────────────────────────────────
+// ── Adapter ──────────────────────────────────────────────────────
 
-type SqSeverityGroup struct {
-	Severity string
-	Issues   []SonarQubeIssue
-}
+var sqSeverityOrder = []string{"BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"}
 
-type SqTypeGroup struct {
-	Type   string
-	Issues []SonarQubeIssue
-}
+func BuildSonarQubeReportData(report SonarQubeReport, title string) ReportData {
+	total := len(report.Issues)
+	hasIssues := total > 0
 
-type SqFileGroup struct {
-	File   string
-	Issues []SonarQubeIssue
-}
+	type counts struct{ blocker, critical, major, minor, info int }
+	var cnt counts
+	sevMap := make(map[string][]SonarQubeIssue)
 
-type SqSummary struct {
-	Total      int
-	BySeverity struct {
-		Blocker  int
-		Critical int
-		Major    int
-		Minor    int
-		Info     int
+	projectKey := ""
+	for _, issue := range report.Issues {
+		sev := strings.ToUpper(issue.Severity)
+		sevMap[sev] = append(sevMap[sev], issue)
+		switch sev {
+		case "BLOCKER":
+			cnt.blocker++
+		case "CRITICAL":
+			cnt.critical++
+		case "MAJOR":
+			cnt.major++
+		case "MINOR":
+			cnt.minor++
+		default:
+			cnt.info++
+		}
+		if projectKey == "" {
+			parts := strings.SplitN(issue.Component, ":", 2)
+			if len(parts) > 1 {
+				projectKey = parts[0]
+			}
+		}
 	}
-	ByType struct {
-		Bug             int
-		CodeSmell       int
-		Vulnerability   int
-		SecurityHotspot int
-	}
-	Open        int
-	Confirmed   int
-	Reopened    int
-	TotalEffort string
-}
 
-type SqReportData struct {
-	Title          string
-	GeneratedAt    string
-	ProjectKey     string
-	TotalIssues    int
-	TotalPages     int
-	Summary        SqSummary
-	SeverityGroups []SqSeverityGroup
-	TypeGroups     []SqTypeGroup
-	FileGroups     []SqFileGroup
-	HasIssues      bool
+	statusLine := "No issues found — code is clean"
+	if hasIssues {
+		statusLine = fmt.Sprintf("%s found · %d blocker, %d critical, %d major", pluralise(total, "issue", "issues"), cnt.blocker, cnt.critical, cnt.major)
+	}
+
+	cols := []string{"Rule", "Type", "File", "Line", "Message"}
+	var groups []SectionGroup
+	for _, sev := range sqSeverityOrder {
+		issues, ok := sevMap[sev]
+		if !ok {
+			continue
+		}
+		sort.Slice(issues, func(i, j int) bool {
+			return issues[i].Component < issues[j].Component
+		})
+		cls, lbl := sqSevCanonical(sev)
+		rows := make([][]template.HTML, 0, len(issues))
+		for _, issue := range issues {
+			file := sqFileFromComp(issue.Component)
+			line := ""
+			if issue.Line > 0 {
+				line = fmt.Sprintf("%d", issue.Line)
+			}
+			rows = append(rows, []template.HTML{
+				MonoHTML(sqRuleLang(issue.Rule) + ":" + sqRuleID(issue.Rule)),
+				template.HTML(fmt.Sprintf(`<span class="badge state-neutral">%s</span>`, template.HTMLEscapeString(sqTypeLabel(issue.Type)))),
+				template.HTML(fmt.Sprintf(`<span class="td-file">%s</span>`, template.HTMLEscapeString(file))),
+				MonoHTML(line),
+				template.HTML(template.HTMLEscapeString(issue.Message)),
+			})
+		}
+		groups = append(groups, SectionGroup{
+			Name:    lbl,
+			Count:   pluralise(len(issues), "issue", "issues"),
+			Class:   cls,
+			Columns: cols,
+			Rows:    rows,
+		})
+	}
+
+	meta := []KV{
+		{Label: "Project Key", Value: projectKey},
+	}
+
+	return ReportData{
+		Title:       title,
+		Eyebrow:     "Static Code Analysis",
+		Subtitle:    fmt.Sprintf("Project: %s · %s", projectKey, pluralise(total, "issue", "issues")),
+		GeneratedAt: time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
+		Status:      statusFromBool(hasIssues),
+		StatusLine:  statusLine,
+		Meta:        meta,
+		Summary: []StatCard{
+			{Number: fmt.Sprintf("%d", total), Label: "Total", Variant: "primary"},
+			{Number: fmt.Sprintf("%d", cnt.blocker), Label: "Blocker", Variant: "blocker"},
+			{Number: fmt.Sprintf("%d", cnt.critical), Label: "Critical", Variant: "critical"},
+			{Number: fmt.Sprintf("%d", cnt.major), Label: "Major", Variant: "medium"},
+			{Number: fmt.Sprintf("%d", cnt.minor), Label: "Minor", Variant: "low"},
+			{Number: fmt.Sprintf("%d", cnt.info), Label: "Info", Variant: "info"},
+		},
+		Sections: []Section{
+			{Kind: "table", Title: "Issues by Severity", Groups: groups, Empty: "No issues in report."},
+		},
+		Footer: FooterInfo{
+			Total: pluralise(total, "issue", "issues"),
+			Brand: "devops-reporter · sonarqube",
+		},
+	}
 }
 
 // ── Helpers ──────────────────────────────────────────────────────
 
-var sqSeverityOrder = []string{"BLOCKER", "CRITICAL", "MAJOR", "MINOR", "INFO"}
-
-var sqTypeOrder = []string{"BUG", "VULNERABILITY", "CODE_SMELL", "SECURITY_HOTSPOT"}
-
-func sqSeverityClass(severity string) string {
-	switch strings.ToUpper(severity) {
+func sqSevCanonical(sev string) (cssClass, label string) {
+	switch strings.ToUpper(sev) {
 	case "BLOCKER":
-		return "sev-blocker"
+		return "sev-blocker", "Blocker"
 	case "CRITICAL":
-		return "sev-critical"
+		return "sev-critical", "Critical"
 	case "MAJOR":
-		return "sev-major"
+		return "sev-medium", "Major"
 	case "MINOR":
-		return "sev-minor"
+		return "sev-low", "Minor"
 	default:
-		return "sev-info"
-	}
-}
-
-func sqSeverityLabel(severity string) string {
-	switch strings.ToUpper(severity) {
-	case "BLOCKER":
-		return "Blocker"
-	case "CRITICAL":
-		return "Critical"
-	case "MAJOR":
-		return "Major"
-	case "MINOR":
-		return "Minor"
-	default:
-		return "Info"
-	}
-}
-
-func sqTypeClass(issueType string) string {
-	switch strings.ToUpper(issueType) {
-	case "BUG":
-		return "type-bug"
-	case "VULNERABILITY":
-		return "type-vuln"
-	case "CODE_SMELL":
-		return "type-smell"
-	case "SECURITY_HOTSPOT":
-		return "type-hotspot"
-	default:
-		return "type-other"
+		return "sev-info", "Info"
 	}
 }
 
@@ -196,6 +205,14 @@ func sqRuleLang(rule string) string {
 	return ""
 }
 
+func sqRuleID(rule string) string {
+	parts := strings.SplitN(rule, ":", 2)
+	if len(parts) > 1 {
+		return parts[1]
+	}
+	return rule
+}
+
 func sqParseEffort(effort string) time.Duration {
 	if effort == "" {
 		return 0
@@ -205,141 +222,4 @@ func sqParseEffort(effort string) time.Duration {
 		return 0
 	}
 	return d
-}
-
-func sqFormatEffort(d time.Duration) string {
-	if d == 0 {
-		return "—"
-	}
-	if d < time.Hour {
-		return d.Round(time.Minute).String()
-	}
-	return d.Round(time.Minute).String()
-}
-
-// ── Report Builder ───────────────────────────────────────────────
-
-func BuildSonarQubeReportData(report SonarQubeReport, title string) SqReportData {
-	summary := SqSummary{Total: len(report.Issues)}
-
-	sevMap := make(map[string][]SonarQubeIssue)
-	typeMap := make(map[string][]SonarQubeIssue)
-	fileMap := make(map[string][]SonarQubeIssue)
-	var totalEffort time.Duration
-
-	for _, issue := range report.Issues {
-		sev := strings.ToUpper(issue.Severity)
-		typ := strings.ToUpper(issue.Type)
-
-		sevMap[sev] = append(sevMap[sev], issue)
-		typeMap[typ] = append(typeMap[typ], issue)
-
-		file := sqFileFromComp(issue.Component)
-		fileMap[file] = append(fileMap[file], issue)
-
-		if issue.Effort != "" {
-			totalEffort += sqParseEffort(issue.Effort)
-		}
-
-		switch sev {
-		case "BLOCKER":
-			summary.BySeverity.Blocker++
-		case "CRITICAL":
-			summary.BySeverity.Critical++
-		case "MAJOR":
-			summary.BySeverity.Major++
-		case "MINOR":
-			summary.BySeverity.Minor++
-		default:
-			summary.BySeverity.Info++
-		}
-
-		switch typ {
-		case "BUG":
-			summary.ByType.Bug++
-		case "VULNERABILITY":
-			summary.ByType.Vulnerability++
-		case "CODE_SMELL":
-			summary.ByType.CodeSmell++
-		case "SECURITY_HOTSPOT":
-			summary.ByType.SecurityHotspot++
-		}
-
-		switch issue.Status {
-		case "OPEN":
-			summary.Open++
-		case "CONFIRMED":
-			summary.Confirmed++
-		case "REOPENED":
-			summary.Reopened++
-		}
-	}
-
-	severityGroups := make([]SqSeverityGroup, 0, len(sqSeverityOrder))
-	for _, sev := range sqSeverityOrder {
-		if issues, ok := sevMap[sev]; ok {
-			sort.Slice(issues, func(i, j int) bool {
-				return issues[i].Component < issues[j].Component
-			})
-			severityGroups = append(severityGroups, SqSeverityGroup{Severity: sev, Issues: issues})
-		}
-	}
-
-	typeGroups := make([]SqTypeGroup, 0, len(sqTypeOrder))
-	for _, typ := range sqTypeOrder {
-		if issues, ok := typeMap[typ]; ok {
-			sort.Slice(issues, func(i, j int) bool {
-				return sqSeverityRank(issues[i].Severity) < sqSeverityRank(issues[j].Severity)
-			})
-			typeGroups = append(typeGroups, SqTypeGroup{Type: typ, Issues: issues})
-		}
-	}
-
-	fileKeys := make([]string, 0, len(fileMap))
-	for f := range fileMap {
-		fileKeys = append(fileKeys, f)
-	}
-	sort.Strings(fileKeys)
-	fileGroups := make([]SqFileGroup, 0, len(fileKeys))
-	for _, f := range fileKeys {
-		fileGroups = append(fileGroups, SqFileGroup{File: f, Issues: fileMap[f]})
-	}
-
-	summary.TotalEffort = sqFormatEffort(totalEffort)
-
-	projectKey := ""
-	if len(report.Issues) > 0 {
-		parts := strings.SplitN(report.Issues[0].Component, ":", 2)
-		if len(parts) > 1 {
-			projectKey = parts[0]
-		}
-	}
-
-	return SqReportData{
-		Title:          title,
-		GeneratedAt:    time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
-		ProjectKey:     projectKey,
-		TotalIssues:    report.Total,
-		TotalPages:     report.Paging.Total,
-		Summary:        summary,
-		SeverityGroups: severityGroups,
-		TypeGroups:     typeGroups,
-		FileGroups:     fileGroups,
-		HasIssues:      summary.Total > 0,
-	}
-}
-
-func sqSeverityRank(severity string) int {
-	switch strings.ToUpper(severity) {
-	case "BLOCKER":
-		return 0
-	case "CRITICAL":
-		return 1
-	case "MAJOR":
-		return 2
-	case "MINOR":
-		return 3
-	default:
-		return 4
-	}
 }

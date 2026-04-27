@@ -1,29 +1,24 @@
 package main
 
 import (
+	_ "embed"
 	"encoding/json"
 	"flag"
 	"fmt"
 	"html/template"
 	"io"
+	"net/http"
 	"os"
 	"sort"
 	"strings"
+	"time"
 )
 
-// ReportSource defines a pluggable report source.
-type ReportSource struct {
-	DefaultTitle string
-	Template     string
-	FuncMap      template.FuncMap
-	Parse        func(data []byte, title string) (any, error)
-}
+//go:embed templates/report.html
+var reportTemplate string
 
-var sources = map[string]*ReportSource{}
-
-func RegisterSource(name string, s *ReportSource) {
-	sources[name] = s
-}
+//go:embed templates/themes/paper.css
+var paperCSS string
 
 var version = "dev"
 
@@ -34,8 +29,8 @@ func main() {
 	}
 	sort.Strings(sourceNames)
 
-	var outputFile, source, title, templateFile string
-	var showVersion bool
+	var outputFile, source, title, orgName, templateFile, cssFile string
+	var showVersion, summaryOnly bool
 
 	flag.StringVar(&outputFile, "output", "report.html", "output HTML file path")
 	flag.StringVar(&outputFile, "o", "report.html", "shorthand for --output")
@@ -45,6 +40,9 @@ func main() {
 	flag.StringVar(&title, "t", "", "shorthand for --title")
 	flag.StringVar(&templateFile, "template", "", "path to a custom HTML template file (uses built-in template if not set)")
 	flag.StringVar(&templateFile, "T", "", "shorthand for --template")
+	flag.StringVar(&cssFile, "css", "", "path or URL to a custom CSS file; replaces the built-in paper theme\n    (e.g. --css themes/dracula.css or --css https://example.com/my.css)\n    Note: if --template is set this flag is ignored")
+	flag.StringVar(&orgName, "org", "", "organization name shown in the report header and footer")
+	flag.BoolVar(&summaryOnly, "summary-only", false, "render only the summary section; omit detail tables and cards")
 	flag.BoolVar(&showVersion, "version", false, "print version and exit")
 	flag.BoolVar(&showVersion, "v", false, "shorthand for --version")
 
@@ -57,8 +55,9 @@ func main() {
 		flag.PrintDefaults()
 		fmt.Fprintf(os.Stdout, "\nExamples:\n")
 		fmt.Fprintf(os.Stdout, "  argocd app get my-app -o json | devops-reporter --source argocd\n")
-		fmt.Fprintf(os.Stdout, "  kubeconform -output json ./manifests/ | devops-reporter --source kubeconform\n")
-		fmt.Fprintf(os.Stdout, "  argocd app get my-app -o json | devops-reporter --source argocd --template custom.template.html\n")
+		fmt.Fprintf(os.Stdout, "  trivy image --format json myimage | devops-reporter --source trivy --summary-only\n")
+		fmt.Fprintf(os.Stdout, "  trivy image --format json myimage | devops-reporter --source trivy --css themes/dracula.css\n")
+		fmt.Fprintf(os.Stdout, "  trivy image --format json myimage | devops-reporter --source trivy --css https://example.com/my-theme.css\n")
 	}
 	flag.Parse()
 
@@ -111,7 +110,11 @@ func main() {
 		os.Exit(1)
 	}
 
-	tmplContent := src.Template
+	reportData.SummaryOnly = summaryOnly
+	reportData.OrgName = orgName
+
+	// Resolve template content: --template flag > embedded report.html
+	tmplContent := reportTemplate
 	if templateFile != "" {
 		fileBytes, err := os.ReadFile(templateFile)
 		if err != nil {
@@ -119,9 +122,23 @@ func main() {
 			os.Exit(1)
 		}
 		tmplContent = string(fileBytes)
+		// When a custom template is used, CSS injection is the user's responsibility.
+		reportData.CSS = ""
+	} else {
+		// Resolve CSS: --css flag > built-in paper theme
+		css := paperCSS
+		if cssFile != "" {
+			loaded, err := loadCSS(cssFile)
+			if err != nil {
+				fmt.Fprintf(os.Stderr, "error loading CSS from %q: %v\n", cssFile, err)
+				os.Exit(1)
+			}
+			css = loaded
+		}
+		reportData.CSS = template.CSS(css)
 	}
 
-	tmpl, err := template.New("report").Funcs(src.FuncMap).Parse(tmplContent)
+	tmpl, err := template.New("report").Parse(tmplContent)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "error parsing template: %v\n", err)
 		os.Exit(1)
@@ -140,4 +157,29 @@ func main() {
 	}
 
 	fmt.Fprintf(os.Stderr, "report written to %s\n", outputFile)
+}
+
+// loadCSS loads a stylesheet from a local file path or an https:// URL.
+func loadCSS(ref string) (string, error) {
+	if strings.HasPrefix(ref, "https://") || strings.HasPrefix(ref, "http://") {
+		client := &http.Client{Timeout: 30 * time.Second}
+		resp, err := client.Get(ref)
+		if err != nil {
+			return "", err
+		}
+		defer resp.Body.Close()
+		if resp.StatusCode != http.StatusOK {
+			return "", fmt.Errorf("HTTP %d", resp.StatusCode)
+		}
+		b, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return "", err
+		}
+		return string(b), nil
+	}
+	b, err := os.ReadFile(ref)
+	if err != nil {
+		return "", err
+	}
+	return string(b), nil
 }

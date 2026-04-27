@@ -1,27 +1,21 @@
 package main
 
 import (
-	_ "embed"
 	"encoding/json"
+	"fmt"
 	"html/template"
+	"sort"
+	"strings"
 	"time"
 )
-
-//go:embed templates/tenable-was.html
-var tenableWasTemplate string
 
 func init() {
 	RegisterSource("tenable-was", &ReportSource{
 		DefaultTitle: "Tenable WAS Scan Report",
-		Template:     tenableWasTemplate,
-		FuncMap: template.FuncMap{
-			"wasRiskClass": wasRiskClass,
-			"wasRiskLabel": wasRiskLabel,
-		},
-		Parse: func(data []byte, title string) (any, error) {
+		Parse: func(data []byte, title string) (ReportData, error) {
 			var report WasReport
 			if err := json.Unmarshal(data, &report); err != nil {
-				return nil, err
+				return ReportData{}, err
 			}
 			return BuildWasReportData(report, title), nil
 		},
@@ -74,76 +68,201 @@ type WasReport struct {
 	Findings []WasFinding `json:"findings"`
 }
 
-// ── Report types ─────────────────────────────────────────────────
-
-type WasSeverityGroup struct {
-	Severity string
-	Findings []WasFinding
-}
-
-type WasSummary struct {
-	Critical int
-	High     int
-	Medium   int
-	Low      int
-	Info     int
-	Total    int
-}
-
-type WasReportData struct {
-	Title       string
-	GeneratedAt string
-	ScanTarget  string
-	ScanID      string
-	ScanStatus  string
-	ScanName    string
-	Template    string
-	StartedAt   string
-	FinalizedAt string
-	Duration    string
-	Summary     WasSummary
-	Groups      []WasSeverityGroup
-	HasIssues   bool
-}
+// ── Adapter ──────────────────────────────────────────────────────
 
 var wasSeverityOrder = []string{"critical", "high", "medium", "low", "info"}
 
-func BuildWasReportData(r WasReport, title string) WasReportData {
+func BuildWasReportData(r WasReport, title string) ReportData {
 	groupMap := make(map[string][]WasFinding)
 	for _, f := range r.Findings {
-		groupMap[f.RiskFactor] = append(groupMap[f.RiskFactor], f)
+		risk := strings.ToLower(f.RiskFactor)
+		if risk == "" {
+			risk = "info"
+		}
+		groupMap[risk] = append(groupMap[risk], f)
 	}
 
-	summary := WasSummary{Total: len(r.Findings)}
-	summary.Critical = len(groupMap["critical"])
-	summary.High = len(groupMap["high"])
-	summary.Medium = len(groupMap["medium"])
-	summary.Low = len(groupMap["low"])
-	summary.Info = len(groupMap["info"])
+	total := len(r.Findings)
+	critical := len(groupMap["critical"])
+	high := len(groupMap["high"])
+	medium := len(groupMap["medium"])
+	low := len(groupMap["low"])
+	info := len(groupMap["info"])
 
-	groups := make([]WasSeverityGroup, 0, len(wasSeverityOrder))
-	for _, sev := range wasSeverityOrder {
-		if findings, ok := groupMap[sev]; ok {
-			groups = append(groups, WasSeverityGroup{Severity: sev, Findings: findings})
-		}
+	hasIssues := critical+high+medium > 0
+	statusLine := "No significant findings"
+	if hasIssues {
+		statusLine = fmt.Sprintf("%s · %d critical, %d high, %d medium",
+			pluralise(total, "finding", "findings"), critical, high, medium)
 	}
 
 	startedAt, finishedAt, duration := wasDuration(r.Scan.StartedAt, r.Scan.FinalizedAt)
 
-	return WasReportData{
+	// ── Summary overview table ─────────────────────────────────────
+	overviewCols := []string{"Risk", "Name", "Family", "URI"}
+	var overviewGroups []SectionGroup
+	for _, sev := range wasSeverityOrder {
+		findings, ok := groupMap[sev]
+		if !ok {
+			continue
+		}
+		sort.Slice(findings, func(i, j int) bool { return findings[i].Name < findings[j].Name })
+		cls, lbl := wasRiskCanonical(sev)
+		rows := make([][]template.HTML, 0, len(findings))
+		for _, f := range findings {
+			uriCell := template.HTML(template.HTMLEscapeString(f.URI))
+			if f.URI != "" {
+				uriCell = LinkHTML(f.URI, f.URI)
+			}
+			rows = append(rows, []template.HTML{
+				BadgeHTML("badge "+cls, lbl),
+				template.HTML(fmt.Sprintf(`<strong>%s</strong>`, template.HTMLEscapeString(f.Name))),
+				template.HTML(template.HTMLEscapeString(f.Family)),
+				uriCell,
+			})
+		}
+		overviewGroups = append(overviewGroups, SectionGroup{
+			Name:    lbl,
+			Count:   pluralise(len(findings), "finding", "findings"),
+			Class:   cls,
+			Columns: overviewCols,
+			Rows:    rows,
+		})
+	}
+
+	// ── Detail cards (one group per severity, one card per finding) ─
+	var cardGroups []SectionGroup
+	for _, sev := range wasSeverityOrder {
+		findings, ok := groupMap[sev]
+		if !ok {
+			continue
+		}
+		cls, lbl := wasRiskCanonical(sev)
+		cards := make([]Card, 0, len(findings))
+		for _, f := range findings {
+			header := wasFindingHeader(f, cls, lbl)
+			body := wasFindingBody(f)
+			tags := wasFindingTags(f)
+			cards = append(cards, Card{Header: header, Body: body, Tags: tags})
+		}
+		cardGroups = append(cardGroups, SectionGroup{
+			Name:  lbl,
+			Count: pluralise(len(findings), "finding", "findings"),
+			Class: cls,
+			Cards: cards,
+		})
+	}
+
+	return ReportData{
 		Title:       title,
+		Eyebrow:     "Web Application Scan",
+		Subtitle:    r.Scan.Target,
 		GeneratedAt: time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
-		ScanTarget:  r.Scan.Target,
-		ScanID:      r.Scan.ScanID,
-		ScanStatus:  r.Scan.Status,
-		ScanName:    r.Config.Name,
-		Template:    r.Template.Name,
-		StartedAt:   startedAt,
-		FinalizedAt: finishedAt,
-		Duration:    duration,
-		Summary:     summary,
-		Groups:      groups,
-		HasIssues:   summary.Critical+summary.High+summary.Medium > 0,
+		Status:      statusFromBool(hasIssues),
+		StatusLine:  statusLine,
+		Meta: []KV{
+			{Label: "Scan Target", Value: r.Scan.Target},
+			{Label: "Scan Name", Value: r.Config.Name},
+			{Label: "Template", Value: r.Template.Name},
+			{Label: "Scan ID", Value: r.Scan.ScanID},
+			{Label: "Status", Value: r.Scan.Status},
+			{Label: "Started", Value: startedAt},
+			{Label: "Finished", Value: finishedAt},
+			{Label: "Duration", Value: duration},
+		},
+		Summary: []StatCard{
+			{Number: fmt.Sprintf("%d", total), Label: "Total", Variant: "primary"},
+			{Number: fmt.Sprintf("%d", critical), Label: "Critical", Variant: "critical"},
+			{Number: fmt.Sprintf("%d", high), Label: "High", Variant: "high"},
+			{Number: fmt.Sprintf("%d", medium), Label: "Medium", Variant: "medium"},
+			{Number: fmt.Sprintf("%d", low), Label: "Low", Variant: "low"},
+			{Number: fmt.Sprintf("%d", info), Label: "Info", Variant: "info"},
+		},
+		Sections: []Section{
+			{Kind: "table", Title: "Findings Overview", Groups: overviewGroups, Empty: "No findings."},
+			{Kind: "cards", Title: "Finding Details", Groups: cardGroups, Empty: "No findings."},
+		},
+		Footer: FooterInfo{
+			Total: pluralise(total, "finding", "findings"),
+			Brand: "devops-reporter · tenable-was",
+		},
+	}
+}
+
+func wasFindingHeader(f WasFinding, cls, lbl string) template.HTML {
+	cvss := ""
+	if f.CVSSv4 != nil {
+		cvss = fmt.Sprintf(`<span style="opacity:.6;font-size:.85em"> CVSSv4 %.1f</span>`, *f.CVSSv4)
+	} else if f.CVSSv3 != nil {
+		cvss = fmt.Sprintf(`<span style="opacity:.6;font-size:.85em"> CVSSv3 %.1f</span>`, *f.CVSSv3)
+	}
+	uri := ""
+	if f.URI != "" {
+		uri = fmt.Sprintf(` <span class="td-file">%s</span>`, template.HTMLEscapeString(f.URI))
+	}
+	return template.HTML(fmt.Sprintf(`%s <strong>%s</strong>%s%s`,
+		BadgeHTML("badge "+cls, lbl),
+		template.HTMLEscapeString(f.Name),
+		cvss,
+		uri,
+	))
+}
+
+func wasFindingBody(f WasFinding) template.HTML {
+	var sb strings.Builder
+	writeSection := func(label, text string, isCode bool) {
+		if text == "" {
+			return
+		}
+		if label != "" {
+			sb.WriteString(fmt.Sprintf(`<p class="finding-label"><strong>%s</strong></p>`, label))
+		}
+		if isCode {
+			sb.WriteString(fmt.Sprintf(`<pre class="finding-code">%s</pre>`, template.HTMLEscapeString(text)))
+		} else {
+			sb.WriteString(fmt.Sprintf(`<p>%s</p>`, template.HTMLEscapeString(text)))
+		}
+	}
+	writeSection("", f.Synopsis, false)
+	writeSection("Description", f.Description, false)
+	writeSection("Solution", f.Solution, false)
+	writeSection("Output", f.Output, true)
+	writeSection("Proof", f.Proof, true)
+	if len(f.SeeAlso) > 0 {
+		sb.WriteString(`<p class="finding-label"><strong>See Also</strong></p><ul class="finding-refs">`)
+		for _, url := range f.SeeAlso {
+			sb.WriteString(fmt.Sprintf(`<li><a href="%s" target="_blank" rel="noopener noreferrer">%s</a></li>`,
+				template.HTMLEscapeString(url), template.HTMLEscapeString(url)))
+		}
+		sb.WriteString(`</ul>`)
+	}
+	return template.HTML(sb.String())
+}
+
+func wasFindingTags(f WasFinding) []string {
+	tags := make([]string, 0, len(f.CVEs)+len(f.CWE)+len(f.OWASP))
+	tags = append(tags, f.CVEs...)
+	for _, cwe := range f.CWE {
+		tags = append(tags, fmt.Sprintf("CWE-%d", cwe))
+	}
+	tags = append(tags, f.OWASP...)
+	return tags
+}
+
+// ── Helpers ──────────────────────────────────────────────────────
+
+func wasRiskCanonical(risk string) (cssClass, label string) {
+	switch strings.ToLower(risk) {
+	case "critical":
+		return "sev-critical", "Critical"
+	case "high":
+		return "sev-high", "High"
+	case "medium":
+		return "sev-medium", "Medium"
+	case "low":
+		return "sev-low", "Low"
+	default:
+		return "sev-info", "Info"
 	}
 }
 
@@ -158,34 +277,4 @@ func wasDuration(startStr, endStr string) (string, string, string) {
 	return start.UTC().Format("2006-01-02 15:04:05 UTC"),
 		end.UTC().Format("2006-01-02 15:04:05 UTC"),
 		d.String()
-}
-
-func wasRiskClass(risk string) string {
-	switch risk {
-	case "critical":
-		return "risk-critical"
-	case "high":
-		return "risk-high"
-	case "medium":
-		return "risk-medium"
-	case "low":
-		return "risk-low"
-	default:
-		return "risk-info"
-	}
-}
-
-func wasRiskLabel(risk string) string {
-	switch risk {
-	case "critical":
-		return "Critical"
-	case "high":
-		return "High"
-	case "medium":
-		return "Medium"
-	case "low":
-		return "Low"
-	default:
-		return "Info"
-	}
 }

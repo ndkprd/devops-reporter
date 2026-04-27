@@ -1,30 +1,21 @@
 package main
 
 import (
-	_ "embed"
 	"encoding/json"
+	"fmt"
 	"html/template"
 	"sort"
+	"strings"
 	"time"
 )
-
-//go:embed templates/argocd.html
-var argocdTemplate string
 
 func init() {
 	RegisterSource("argocd", &ReportSource{
 		DefaultTitle: "ArgoCD Application Report",
-		Template:     argocdTemplate,
-		FuncMap: template.FuncMap{
-			"syncClass":   syncClass,
-			"healthClass": healthClass,
-			"opClass":     opClass,
-			"shortRev":    shortRev,
-		},
-		Parse: func(data []byte, title string) (any, error) {
+		Parse: func(data []byte, title string) (ReportData, error) {
 			var app ArgoApplication
 			if err := json.Unmarshal(data, &app); err != nil {
-				return nil, err
+				return ReportData{}, err
 			}
 			return BuildArgoReportData(app, title), nil
 		},
@@ -106,76 +97,33 @@ type ArgoApplication struct {
 	} `json:"status"`
 }
 
-// ── Report types ─────────────────────────────────────────────────
+// ── Adapter ──────────────────────────────────────────────────────
 
-type ArgoResourceSummary struct {
-	Synced    int
-	OutOfSync int
-	Healthy   int
-	Degraded  int
-	Missing   int
-	Unknown   int
-	Total     int
-}
-
-type ArgoKindGroup struct {
-	Kind      string
-	Resources []ArgoResource
-}
-
-type ArgoSyncResultGroup struct {
-	Kind      string
-	Resources []ArgoSyncResult
-}
-
-type ArgoReportData struct {
-	Title          string
-	GeneratedAt    string
-	AppName        string
-	AppNamespace   string
-	Project        string
-	RepoURL        string
-	Path           string
-	TargetRevision string
-	DestServer     string
-	DestNamespace  string
-	SyncStatus     string
-	HealthStatus   string
-	OperationPhase string
-	OperationMsg   string
-	Revision       string
-	Summary        ArgoResourceSummary
-	Groups         []ArgoKindGroup
-	SyncResults    []ArgoSyncResultGroup
-	ExternalURLs   []string
-	Images         []string
-	SourceType     string
-	HasIssues      bool
-}
-
-func BuildArgoReportData(app ArgoApplication, title string) ArgoReportData {
-	summary := ArgoResourceSummary{Total: len(app.Status.Resources)}
+func BuildArgoReportData(app ArgoApplication, title string) ReportData {
+	total := len(app.Status.Resources)
+	var synced, outOfSync, healthy, degraded, missing, unknown int
 	for _, r := range app.Status.Resources {
 		switch r.Status {
 		case "Synced":
-			summary.Synced++
+			synced++
 		case "OutOfSync":
-			summary.OutOfSync++
+			outOfSync++
 		}
 		if r.Health != nil {
 			switch r.Health.Status {
 			case "Healthy":
-				summary.Healthy++
+				healthy++
 			case "Degraded":
-				summary.Degraded++
+				degraded++
 			case "Missing":
-				summary.Missing++
+				missing++
 			default:
-				summary.Unknown++
+				unknown++
 			}
 		}
 	}
 
+	// Group live resources by kind
 	kindMap := make(map[string][]ArgoResource)
 	for _, r := range app.Status.Resources {
 		kindMap[r.Kind] = append(kindMap[r.Kind], r)
@@ -186,18 +134,37 @@ func BuildArgoReportData(app ArgoApplication, title string) ArgoReportData {
 	}
 	sort.Strings(kinds)
 
-	groups := make([]ArgoKindGroup, 0, len(kinds))
+	resourceCols := []string{"Name", "Namespace", "Sync", "Health"}
+	var resourceGroups []SectionGroup
 	for _, kind := range kinds {
 		resources := kindMap[kind]
-		sort.Slice(resources, func(i, j int) bool {
-			return resources[i].Name < resources[j].Name
+		sort.Slice(resources, func(i, j int) bool { return resources[i].Name < resources[j].Name })
+		rows := make([][]template.HTML, 0, len(resources))
+		for _, r := range resources {
+			syncCls, syncLbl := argoSyncCanonical(r.Status)
+			healthCell := template.HTML(`<em style="opacity:.4">—</em>`)
+			if r.Health != nil {
+				hCls, hLbl := argoHealthCanonical(r.Health.Status)
+				healthCell = BadgeHTML("badge "+hCls, hLbl)
+			}
+			rows = append(rows, []template.HTML{
+				template.HTML(fmt.Sprintf(`<strong>%s</strong>`, template.HTMLEscapeString(r.Name))),
+				MonoHTML(r.Namespace),
+				BadgeHTML("badge "+syncCls, syncLbl),
+				healthCell,
+			})
+		}
+		resourceGroups = append(resourceGroups, SectionGroup{
+			Name:    kind,
+			Count:   pluralise(len(resources), "resource", "resources"),
+			Columns: resourceCols,
+			Rows:    rows,
 		})
-		groups = append(groups, ArgoKindGroup{Kind: kind, Resources: resources})
 	}
 
-	var syncResultGroups []ArgoSyncResultGroup
-	var revision string
-	var opPhase, opMsg string
+	// Sync result groups (from last operation)
+	var syncResultGroups []SectionGroup
+	var revision, opPhase, opMsg string
 
 	if app.Status.OperationState != nil {
 		op := app.Status.OperationState
@@ -215,12 +182,26 @@ func BuildArgoReportData(app ArgoApplication, title string) ArgoReportData {
 		}
 		sort.Strings(syncKinds)
 
+		syncCols := []string{"Name", "Namespace", "Status", "Message"}
 		for _, kind := range syncKinds {
 			results := syncKindMap[kind]
-			sort.Slice(results, func(i, j int) bool {
-				return results[i].Name < results[j].Name
+			sort.Slice(results, func(i, j int) bool { return results[i].Name < results[j].Name })
+			rows := make([][]template.HTML, 0, len(results))
+			for _, r := range results {
+				cls, lbl := argoSyncResultCanonical(r.Status)
+				rows = append(rows, []template.HTML{
+					template.HTML(fmt.Sprintf(`<strong>%s</strong>`, template.HTMLEscapeString(r.Name))),
+					MonoHTML(r.Namespace),
+					BadgeHTML("badge "+cls, lbl),
+					template.HTML(template.HTMLEscapeString(r.Message)),
+				})
+			}
+			syncResultGroups = append(syncResultGroups, SectionGroup{
+				Name:    kind,
+				Count:   pluralise(len(results), "resource", "resources"),
+				Columns: syncCols,
+				Rows:    rows,
 			})
-			syncResultGroups = append(syncResultGroups, ArgoSyncResultGroup{Kind: kind, Resources: results})
 		}
 	}
 
@@ -230,78 +211,168 @@ func BuildArgoReportData(app ArgoApplication, title string) ArgoReportData {
 
 	hasIssues := app.Status.Sync.Status != "Synced" || app.Status.Health.Status != "Healthy"
 
-	return ArgoReportData{
-		Title:          title,
-		GeneratedAt:    time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
-		AppName:        app.Metadata.Name,
-		AppNamespace:   app.Metadata.Namespace,
-		Project:        app.Spec.Project,
-		RepoURL:        app.Spec.Source.RepoURL,
-		Path:           app.Spec.Source.Path,
-		TargetRevision: app.Spec.Source.TargetRevision,
-		DestServer:     app.Spec.Destination.Server,
-		DestNamespace:  app.Spec.Destination.Namespace,
-		SyncStatus:     app.Status.Sync.Status,
-		HealthStatus:   app.Status.Health.Status,
-		OperationPhase: opPhase,
-		OperationMsg:   opMsg,
-		Revision:       revision,
-		Summary:        summary,
-		Groups:         groups,
-		SyncResults:    syncResultGroups,
-		ExternalURLs:   app.Status.Summary.ExternalURLs,
-		Images:         app.Status.Summary.Images,
-		SourceType:     app.Status.SourceType,
-		HasIssues:      hasIssues,
+	// Operation banner panel (shown when an op phase exists)
+	var extraPanels []template.HTML
+	if opPhase != "" {
+		extraPanels = append(extraPanels, renderArgoOpPanel(opPhase, opMsg,
+			app.Status.OperationState.StartedAt, app.Status.OperationState.FinishedAt))
+	}
+	// External URLs / images info panel
+	if len(app.Status.Summary.ExternalURLs) > 0 || len(app.Status.Summary.Images) > 0 {
+		extraPanels = append(extraPanels, renderArgoSummaryPanel(
+			app.Status.Summary.ExternalURLs, app.Status.Summary.Images))
+	}
+
+	syncCls, syncLbl := argoSyncCanonical(app.Status.Sync.Status)
+	healthCls, healthLbl := argoHealthCanonical(app.Status.Health.Status)
+
+	statusLine := fmt.Sprintf("Sync: %s · Health: %s", syncLbl, healthLbl)
+
+	sections := []Section{
+		{Kind: "table", Title: "Resources by Kind", Groups: resourceGroups, Empty: "No resources reported."},
+	}
+	if len(syncResultGroups) > 0 {
+		sections = append(sections, Section{
+			Kind:   "table",
+			Title:  "Last Sync Results",
+			Groups: syncResultGroups,
+			Empty:  "No sync result data.",
+		})
+	}
+
+	_ = syncCls // used in stat card variant below
+	_ = healthCls
+
+	return ReportData{
+		Title:       title,
+		Eyebrow:     "ArgoCD Application",
+		Subtitle:    fmt.Sprintf("%s/%s", app.Metadata.Namespace, app.Metadata.Name),
+		GeneratedAt: time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
+		Status:      statusFromBool(hasIssues),
+		StatusLine:  statusLine,
+		Meta: []KV{
+			{Label: "Application", Value: app.Metadata.Name},
+			{Label: "Namespace", Value: app.Metadata.Namespace},
+			{Label: "Project", Value: app.Spec.Project},
+			{Label: "Repo URL", Value: app.Spec.Source.RepoURL},
+			{Label: "Path", Value: app.Spec.Source.Path},
+			{Label: "Target Revision", Value: app.Spec.Source.TargetRevision},
+			{Label: "Revision", Value: ShortRev(revision)},
+			{Label: "Dest Server", Value: app.Spec.Destination.Server},
+			{Label: "Dest Namespace", Value: app.Spec.Destination.Namespace},
+			{Label: "Source Type", Value: app.Status.SourceType},
+		},
+		ExtraPanels: extraPanels,
+		Summary: []StatCard{
+			{Number: fmt.Sprintf("%d", total), Label: "Resources", Variant: "primary"},
+			{Number: fmt.Sprintf("%d", synced), Label: "Synced", Variant: "pass"},
+			{Number: fmt.Sprintf("%d", outOfSync), Label: "Out of Sync", Variant: "warn"},
+			{Number: fmt.Sprintf("%d", healthy), Label: "Healthy", Variant: "pass"},
+			{Number: fmt.Sprintf("%d", degraded), Label: "Degraded", Variant: "fail"},
+			{Number: fmt.Sprintf("%d", missing), Label: "Missing", Variant: "warn"},
+		},
+		Sections: sections,
+		Footer: FooterInfo{
+			Total: pluralise(total, "resource", "resources"),
+			Brand: "devops-reporter · argocd",
+		},
 	}
 }
 
-func syncClass(status string) string {
+func renderArgoOpPanel(phase, msg, startedAt, finishedAt string) template.HTML {
+	cls, lbl := argoOpCanonical(phase)
+	var sb strings.Builder
+	sb.WriteString(fmt.Sprintf(`<div class="extra-panel">
+  <div class="extra-panel-eyebrow">Last Operation</div>
+  <div class="extra-panel-name">%s %s</div>
+  <div class="extra-panel-meta">`,
+		BadgeHTML("badge "+cls, lbl),
+		template.HTMLEscapeString(msg),
+	))
+	if startedAt != "" {
+		sb.WriteString(fmt.Sprintf(`<span><strong>Started</strong> %s</span>`, template.HTMLEscapeString(startedAt)))
+	}
+	if finishedAt != "" {
+		sb.WriteString(fmt.Sprintf(`<span><strong>Finished</strong> %s</span>`, template.HTMLEscapeString(finishedAt)))
+	}
+	sb.WriteString(`</div></div>`)
+	return template.HTML(sb.String())
+}
+
+func renderArgoSummaryPanel(urls, images []string) template.HTML {
+	var sb strings.Builder
+	sb.WriteString(`<div class="extra-panel">
+  <div class="extra-panel-eyebrow">Application Summary</div>
+  <div class="extra-panel-meta">`)
+	for _, u := range urls {
+		sb.WriteString(fmt.Sprintf(`<span class="full"><strong>URL</strong> <a href="%s" target="_blank" rel="noopener noreferrer">%s</a></span>`,
+			template.HTMLEscapeString(u), template.HTMLEscapeString(u)))
+	}
+	for _, img := range images {
+		sb.WriteString(fmt.Sprintf(`<span class="full"><strong>Image</strong> %s</span>`,
+			template.HTMLEscapeString(img)))
+	}
+	sb.WriteString(`</div></div>`)
+	return template.HTML(sb.String())
+}
+
+// ── Helpers ──────────────────────────────────────────────────────
+
+func argoSyncCanonical(status string) (cssClass, label string) {
 	switch status {
 	case "Synced":
-		return "sync-synced"
+		return "state-pass", "Synced"
 	case "OutOfSync":
-		return "sync-outofsync"
+		return "state-warn", "OutOfSync"
 	default:
-		return "sync-unknown"
+		return "state-neutral", status
 	}
 }
 
-func healthClass(status string) string {
+func argoHealthCanonical(status string) (cssClass, label string) {
 	switch status {
 	case "Healthy":
-		return "health-healthy"
+		return "state-pass", "Healthy"
 	case "Degraded":
-		return "health-degraded"
+		return "state-fail", "Degraded"
 	case "Progressing":
-		return "health-progressing"
+		return "state-warn", "Progressing"
 	case "Suspended":
-		return "health-suspended"
+		return "state-neutral", "Suspended"
 	case "Missing":
-		return "health-missing"
+		return "state-warn", "Missing"
 	default:
-		return "health-unknown"
+		return "state-neutral", status
 	}
 }
 
-func opClass(phase string) string {
+func argoSyncResultCanonical(status string) (cssClass, label string) {
+	switch status {
+	case "Synced":
+		return "state-pass", "Synced"
+	case "SyncFailed":
+		return "state-fail", "Failed"
+	case "Pruned":
+		return "state-neutral", "Pruned"
+	default:
+		if status == "" {
+			return "state-neutral", "—"
+		}
+		return "state-neutral", status
+	}
+}
+
+func argoOpCanonical(phase string) (cssClass, label string) {
 	switch phase {
 	case "Succeeded":
-		return "op-succeeded"
+		return "state-pass", "Succeeded"
 	case "Failed":
-		return "op-failed"
+		return "state-fail", "Failed"
 	case "Running":
-		return "op-running"
+		return "state-warn", "Running"
 	case "Error":
-		return "op-error"
+		return "state-fail", "Error"
 	default:
-		return "op-unknown"
+		return "state-neutral", phase
 	}
-}
-
-func shortRev(revision string) string {
-	if len(revision) > 7 {
-		return revision[:7]
-	}
-	return revision
 }

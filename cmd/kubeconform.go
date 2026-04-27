@@ -1,28 +1,19 @@
 package main
 
 import (
-	_ "embed"
 	"encoding/json"
+	"fmt"
 	"html/template"
-	"sort"
 	"time"
 )
-
-//go:embed templates/kubeconform.html
-var kubeconformTemplate string
 
 func init() {
 	RegisterSource("kubeconform", &ReportSource{
 		DefaultTitle: "Kubeconform Validation Report",
-		Template:     kubeconformTemplate,
-		FuncMap: template.FuncMap{
-			"statusLabel": kcStatusLabel,
-			"statusClass": kcStatusClass,
-		},
-		Parse: func(data []byte, title string) (any, error) {
+		Parse: func(data []byte, title string) (ReportData, error) {
 			var output KubeconformOutput
 			if err := json.Unmarshal(data, &output); err != nil {
-				return nil, err
+				return ReportData{}, err
 			}
 			return BuildKubeconformReportData(output, title), nil
 		},
@@ -52,83 +43,90 @@ type KubeconformOutput struct {
 	Summary   KcSummary    `json:"summary"`
 }
 
-// ── Report types ─────────────────────────────────────────────────
+// ── Adapter ──────────────────────────────────────────────────────
 
-type KcKindGroup struct {
-	Kind      string
-	Resources []KcResource
-}
+func BuildKubeconformReportData(output KubeconformOutput, title string) ReportData {
+	hasIssues := output.Summary.Invalid+output.Summary.Errors > 0
+	total := len(output.Resources)
 
-type KubeconformReportData struct {
-	Title       string
-	GeneratedAt string
-	Summary     KcSummary
-	Groups      []KcKindGroup
-	TotalCount  int
-	HasIssues   bool
-}
+	statusLine := "All resources valid"
+	if hasIssues {
+		statusLine = fmt.Sprintf(
+			"%s detected",
+			pluralise(output.Summary.Invalid+output.Summary.Errors, "invalid resource", "invalid resources"),
+		)
+	}
 
-func BuildKubeconformReportData(output KubeconformOutput, title string) KubeconformReportData {
+	// Group resources by kind, preserving order within each kind
+	kindOrder := []string{}
 	kindMap := make(map[string][]KcResource)
 	for _, r := range output.Resources {
+		if _, seen := kindMap[r.Kind]; !seen {
+			kindOrder = append(kindOrder, r.Kind)
+		}
 		kindMap[r.Kind] = append(kindMap[r.Kind], r)
 	}
 
-	kinds := make([]string, 0, len(kindMap))
-	for k := range kindMap {
-		kinds = append(kinds, k)
-	}
-	sort.Strings(kinds)
-
-	groups := make([]KcKindGroup, 0, len(kinds))
-	for _, kind := range kinds {
+	cols := []string{"Name", "File", "Status", "Message"}
+	var groups []SectionGroup
+	for _, kind := range kindOrder {
 		resources := kindMap[kind]
-		sort.Slice(resources, func(i, j int) bool {
-			return resources[i].Name < resources[j].Name
+		rows := make([][]template.HTML, 0, len(resources))
+		for _, r := range resources {
+			cls, lbl := kcCanonical(r.Status)
+			rows = append(rows, []template.HTML{
+				template.HTML(template.HTMLEscapeString(r.Name)),
+				MonoHTML(r.Filename),
+				BadgeHTML("badge "+cls, lbl),
+				template.HTML(template.HTMLEscapeString(r.Msg)),
+			})
+		}
+		groups = append(groups, SectionGroup{
+			Name:    kind,
+			Count:   pluralise(len(resources), "resource", "resources"),
+			Columns: cols,
+			Rows:    rows,
 		})
-		groups = append(groups, KcKindGroup{Kind: kind, Resources: resources})
 	}
 
-	return KubeconformReportData{
+	return ReportData{
 		Title:       title,
+		Eyebrow:     "Kubernetes Schema Validation",
+		Subtitle:    fmt.Sprintf("%s · %d invalid · %d errors", pluralise(total, "resource", "resources"), output.Summary.Invalid, output.Summary.Errors),
 		GeneratedAt: time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
-		Summary:     output.Summary,
-		Groups:      groups,
-		TotalCount:  len(output.Resources),
-		HasIssues:   output.Summary.Invalid+output.Summary.Errors > 0,
+		Status:      statusFromBool(hasIssues),
+		StatusLine:  statusLine,
+		Meta: nil,
+		Summary: []StatCard{
+			{Number: fmt.Sprintf("%d", total), Label: "Total", Variant: "primary"},
+			{Number: fmt.Sprintf("%d", output.Summary.Valid), Label: "Valid", Variant: "pass"},
+			{Number: fmt.Sprintf("%d", output.Summary.Invalid), Label: "Invalid", Variant: "fail"},
+			{Number: fmt.Sprintf("%d", output.Summary.Errors), Label: "Errors", Variant: "warn"},
+			{Number: fmt.Sprintf("%d", output.Summary.Skipped), Label: "Skipped", Variant: "info"},
+		},
+		Sections: []Section{
+			{Kind: "table", Title: "Resources by Kind", Groups: groups, Empty: "No resources in report."},
+		},
+		Footer: FooterInfo{
+			Total: pluralise(total, "resource", "resources"),
+			Brand: "devops-reporter · kubeconform",
+		},
 	}
 }
 
-func kcStatusLabel(status string) string {
+func kcCanonical(status string) (cssClass, label string) {
 	switch status {
 	case "statusValid":
-		return "Valid"
+		return "state-pass", "Valid"
 	case "statusInvalid":
-		return "Invalid"
+		return "state-fail", "Invalid"
 	case "statusError":
-		return "Error"
+		return "state-fail", "Error"
 	case "statusSkipped":
-		return "Skipped"
+		return "state-neutral", "Skipped"
 	case "statusEmpty":
-		return "Empty"
+		return "state-neutral", "Empty"
 	default:
-		return status
-	}
-}
-
-func kcStatusClass(status string) string {
-	switch status {
-	case "statusValid":
-		return "status-valid"
-	case "statusInvalid":
-		return "status-invalid"
-	case "statusError":
-		return "status-error"
-	case "statusSkipped":
-		return "status-skipped"
-	case "statusEmpty":
-		return "status-empty"
-	default:
-		return "status-unknown"
+		return "state-neutral", status
 	}
 }

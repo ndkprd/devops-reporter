@@ -67,7 +67,7 @@
         },
         {
           "name": "aquasecurity:trivy:Labels:maintainer",
-          "value": "andhika.pradana@asdp.id"
+          "value": "user@example.com"
         },
         {
           "name": "aquasecurity:trivy:Labels:org.opencontainers.image.created",
@@ -79,7 +79,7 @@
         },
         {
           "name": "aquasecurity:trivy:Labels:org.opencontainers.image.source",
-          "value": "https://git.devops.asdp.id/itops/sample-project"
+          "value": "https://git.devops.example.com/itops/sample-project"
         },
         {
           "name": "aquasecurity:trivy:Reference",

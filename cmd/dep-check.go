@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "embed"
 	"encoding/json"
 	"fmt"
 	"html"
@@ -12,23 +11,13 @@ import (
 	"time"
 )
 
-//go:embed templates/dep-check.html
-var depCheckTemplate string
-
 func init() {
 	RegisterSource("dependency-check", &ReportSource{
 		DefaultTitle: "Dependency-Check Report",
-		Template:     depCheckTemplate,
-		FuncMap: template.FuncMap{
-			"depSevClass":    depSevClass,
-			"depSevLabel":    depSevLabel,
-			"depMarkdown":    depMarkdownToHTML,
-			"depCVSSScore":   depCVSSScore,
-		},
-		Parse: func(data []byte, title string) (any, error) {
+		Parse: func(data []byte, title string) (ReportData, error) {
 			var report DepReport
 			if err := json.Unmarshal(data, &report); err != nil {
-				return nil, err
+				return ReportData{}, err
 			}
 			return BuildDepReportData(report, title), nil
 		},
@@ -115,50 +104,7 @@ type DepReport struct {
 	Dependencies []DepDependency `json:"dependencies"`
 }
 
-// ── Report types ─────────────────────────────────────────────────
-
-type DepCredit struct {
-	Source string
-	Text   string
-}
-
-type DepSummary struct {
-	Total      int
-	Vulnerable int
-	Clean      int
-	Critical   int
-	High       int
-	Medium     int
-	Low        int
-	Info       int
-}
-
-type DepVulnEntry struct {
-	DepName  string
-	CVEName  string
-	Severity string
-	CVSS     string
-}
-
-type DepVulnGroup struct {
-	Severity string
-	Entries  []DepVulnEntry
-}
-
-type DepReportData struct {
-	Title          string
-	GeneratedAt    string
-	ProjectName    string
-	ReportDate     string
-	EngineVersion  string
-	DataSources    []DepDataSource
-	Summary        DepSummary
-	VulnGroups     []DepVulnGroup
-	VulnerableDeps []DepDependency
-	CleanDeps      []DepDependency
-	Credits        []DepCredit
-	HasIssues      bool
-}
+// ── Adapter ──────────────────────────────────────────────────────
 
 var depSeverityRank = map[string]int{
 	"critical":      0,
@@ -170,6 +116,218 @@ var depSeverityRank = map[string]int{
 	"informational": 4,
 	"negligible":    4,
 }
+
+func BuildDepReportData(r DepReport, title string) ReportData {
+	var totalVulns, critical, high, medium, low, info int
+	var vulnDeps, cleanDeps []DepDependency
+
+	for _, d := range r.Dependencies {
+		if len(d.Vulnerabilities) == 0 {
+			cleanDeps = append(cleanDeps, d)
+			continue
+		}
+		sort.Slice(d.Vulnerabilities, func(i, j int) bool {
+			return depSeverityRank[strings.ToLower(d.Vulnerabilities[i].Severity)] <
+				depSeverityRank[strings.ToLower(d.Vulnerabilities[j].Severity)]
+		})
+		for _, v := range d.Vulnerabilities {
+			totalVulns++
+			switch depNormSeverity(v.Severity) {
+			case "critical":
+				critical++
+			case "high":
+				high++
+			case "medium":
+				medium++
+			case "low":
+				low++
+			default:
+				info++
+			}
+		}
+		vulnDeps = append(vulnDeps, d)
+	}
+
+	sort.Slice(vulnDeps, func(i, j int) bool {
+		ri := depSeverityRank[depWorstSeverity(vulnDeps[i])]
+		rj := depSeverityRank[depWorstSeverity(vulnDeps[j])]
+		if ri != rj {
+			return ri < rj
+		}
+		return vulnDeps[i].FileName < vulnDeps[j].FileName
+	})
+
+	totalDeps := len(r.Dependencies)
+	vulnerableDeps := len(vulnDeps)
+	hasIssues := vulnerableDeps > 0
+
+	statusLine := "No vulnerable dependencies found"
+	if hasIssues {
+		statusLine = fmt.Sprintf("%s · %d critical, %d high, %d medium",
+			pluralise(vulnerableDeps, "vulnerable dependency", "vulnerable dependencies"), critical, high, medium)
+	}
+
+	// ── Vulnerability summary table (by severity) ─────────────────
+	sevOrder := []string{"critical", "high", "medium", "low", "info"}
+	type vulnEntry struct{ dep, cve, cvss string }
+	groupMap := make(map[string][]vulnEntry)
+	for _, d := range vulnDeps {
+		for _, v := range d.Vulnerabilities {
+			norm := depNormSeverity(v.Severity)
+			groupMap[norm] = append(groupMap[norm], vulnEntry{
+				dep:  d.FileName,
+				cve:  v.Name,
+				cvss: depCVSSScore(v),
+			})
+		}
+	}
+
+	vulnCols := []string{"Dependency", "CVE / ID", "CVSS"}
+	var vulnGroups []SectionGroup
+	for _, sev := range sevOrder {
+		entries, ok := groupMap[sev]
+		if !ok {
+			continue
+		}
+		cls, lbl := depSevCanonical(sev)
+		rows := make([][]template.HTML, 0, len(entries))
+		for _, e := range entries {
+			rows = append(rows, []template.HTML{
+				template.HTML(fmt.Sprintf(`<span class="td-file">%s</span>`, template.HTMLEscapeString(e.dep))),
+				template.HTML(fmt.Sprintf(`<strong>%s</strong>`, template.HTMLEscapeString(e.cve))),
+				MonoHTML(e.cvss),
+			})
+		}
+		vulnGroups = append(vulnGroups, SectionGroup{
+			Name:    lbl,
+			Count:   pluralise(len(entries), "vulnerability", "vulnerabilities"),
+			Class:   cls,
+			Columns: vulnCols,
+			Rows:    rows,
+		})
+	}
+
+	// ── Vulnerable dependencies detail (one card per dep) ───────────
+	depCards := make([]Card, 0, len(vulnDeps))
+	for _, d := range vulnDeps {
+		header := template.HTML(fmt.Sprintf(`<strong class="dep-card-name">%s</strong> <span style="opacity:.6;font-size:.85em">%s</span>`,
+			template.HTMLEscapeString(d.FileName),
+			pluralise(len(d.Vulnerabilities), "vulnerability", "vulnerabilities"),
+		))
+
+		var bodyB strings.Builder
+		for i, v := range d.Vulnerabilities {
+			if i > 0 {
+				bodyB.WriteString(`<hr class="vuln-sep">`)
+			}
+			cls, lbl := depSevCanonical(depNormSeverity(v.Severity))
+			bodyB.WriteString(fmt.Sprintf(`<div class="vuln-entry-head">%s <strong class="vuln-name">%s</strong> <span class="vuln-cvss">%s</span></div>`,
+				BadgeHTML("badge "+cls, lbl),
+				template.HTMLEscapeString(v.Name),
+				template.HTMLEscapeString(depCVSSScore(v)),
+			))
+			if v.Description != "" {
+				bodyB.WriteString(`<div class="vuln-desc">`)
+				bodyB.WriteString(string(depMarkdownToHTML(v.Description)))
+				bodyB.WriteString(`</div>`)
+			}
+			if len(v.References) > 0 {
+				bodyB.WriteString(`<p class="dep-refs">`)
+				for j, ref := range v.References {
+					if j > 0 {
+						bodyB.WriteString(" · ")
+					}
+					if ref.URL != "" {
+						bodyB.WriteString(fmt.Sprintf(`<a href="%s" target="_blank" rel="noopener noreferrer">%s</a>`,
+							template.HTMLEscapeString(ref.URL),
+							template.HTMLEscapeString(depRefLabel(ref)),
+						))
+					} else {
+						bodyB.WriteString(template.HTMLEscapeString(depRefLabel(ref)))
+					}
+				}
+				bodyB.WriteString(`</p>`)
+			}
+		}
+
+		var tags []string
+		for _, v := range d.Vulnerabilities {
+			tags = append(tags, v.CWEs...)
+		}
+		depCards = append(depCards, Card{
+			Header: header,
+			Body:   template.HTML(bodyB.String()),
+			Tags:   tags,
+		})
+	}
+	var depCardGroups []SectionGroup
+	if len(depCards) > 0 {
+		depCardGroups = []SectionGroup{{Cards: depCards}}
+	}
+
+	// ── Credits raw section ────────────────────────────────────────
+	var creditsHTML strings.Builder
+	if len(r.ProjectInfo.Credits) > 0 {
+		creditKeys := make([]string, 0, len(r.ProjectInfo.Credits))
+		for k := range r.ProjectInfo.Credits {
+			creditKeys = append(creditKeys, k)
+		}
+		sort.Strings(creditKeys)
+		creditsHTML.WriteString(`<ul class="dep-credits">`)
+		for _, k := range creditKeys {
+			creditsHTML.WriteString(fmt.Sprintf(`<li><strong>%s</strong>: %s</li>`,
+				template.HTMLEscapeString(k),
+				template.HTMLEscapeString(r.ProjectInfo.Credits[k]),
+			))
+		}
+		creditsHTML.WriteString(`</ul>`)
+	}
+
+	reportDate := depFormatTimestamp(r.ProjectInfo.ReportDate)
+
+	sections := []Section{
+		{Kind: "table", Title: "Vulnerabilities by Severity", Groups: vulnGroups, Empty: "No vulnerabilities found."},
+		{Kind: "cards", Title: "Vulnerable Dependencies", Groups: depCardGroups, Empty: "No vulnerable dependencies."},
+	}
+	if creditsHTML.Len() > 0 {
+		sections = append(sections, Section{
+			Kind:  "raw",
+			Title: "Data Sources & Credits",
+			HTML:  template.HTML(creditsHTML.String()),
+		})
+	}
+
+	return ReportData{
+		Title:       title,
+		Eyebrow:     "Dependency Vulnerability Scan",
+		Subtitle:    r.ProjectInfo.Name,
+		GeneratedAt: time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
+		Status:      statusFromBool(hasIssues),
+		StatusLine:  statusLine,
+		Meta: []KV{
+			{Label: "Project", Value: r.ProjectInfo.Name},
+			{Label: "Report Date", Value: reportDate},
+			{Label: "Engine Version", Value: r.ScanInfo.EngineVersion},
+			{Label: "Total Dependencies", Value: fmt.Sprintf("%d", totalDeps)},
+		},
+		Summary: []StatCard{
+			{Number: fmt.Sprintf("%d", totalVulns), Label: "Total Vulns", Variant: "primary"},
+			{Number: fmt.Sprintf("%d", critical), Label: "Critical", Variant: "critical"},
+			{Number: fmt.Sprintf("%d", high), Label: "High", Variant: "high"},
+			{Number: fmt.Sprintf("%d", medium), Label: "Medium", Variant: "medium"},
+			{Number: fmt.Sprintf("%d", low), Label: "Low", Variant: "low"},
+			{Number: fmt.Sprintf("%d", vulnerableDeps), Label: "Affected Deps", Variant: "warn"},
+		},
+		Sections: sections,
+		Footer: FooterInfo{
+			Total: pluralise(vulnerableDeps, "vulnerable dependency", "vulnerable dependencies") +
+				" · " + pluralise(totalDeps, "dependency", "dependencies"),
+			Brand: "devops-reporter · dependency-check",
+		},
+	}
+}
+
+// ── Helpers ──────────────────────────────────────────────────────
 
 func depNormSeverity(s string) string {
 	switch strings.ToLower(s) {
@@ -207,98 +365,39 @@ func depWorstSeverity(dep DepDependency) string {
 	}
 }
 
-func BuildDepReportData(r DepReport, title string) DepReportData {
-	summary := DepSummary{Total: len(r.Dependencies)}
-
-	var vulnDeps, cleanDeps []DepDependency
-
-	for _, d := range r.Dependencies {
-		if len(d.Vulnerabilities) == 0 {
-			cleanDeps = append(cleanDeps, d)
-			summary.Clean++
-			continue
-		}
-		summary.Vulnerable++
-		// sort vulns within each dep by severity
-		sort.Slice(d.Vulnerabilities, func(i, j int) bool {
-			ri := depSeverityRank[strings.ToLower(d.Vulnerabilities[i].Severity)]
-			rj := depSeverityRank[strings.ToLower(d.Vulnerabilities[j].Severity)]
-			return ri < rj
-		})
-		for _, v := range d.Vulnerabilities {
-			switch depNormSeverity(v.Severity) {
-			case "critical":
-				summary.Critical++
-			case "high":
-				summary.High++
-			case "medium":
-				summary.Medium++
-			case "low":
-				summary.Low++
-			default:
-				summary.Info++
-			}
-		}
-		vulnDeps = append(vulnDeps, d)
+func depSevCanonical(sev string) (cssClass, label string) {
+	switch depNormSeverity(sev) {
+	case "critical":
+		return "sev-critical", "Critical"
+	case "high":
+		return "sev-high", "High"
+	case "medium":
+		return "sev-medium", "Medium"
+	case "low":
+		return "sev-low", "Low"
+	default:
+		return "sev-info", "Info"
 	}
+}
 
-	// sort vulnerable deps by worst severity
-	sort.Slice(vulnDeps, func(i, j int) bool {
-		ri := depSeverityRank[depWorstSeverity(vulnDeps[i])]
-		rj := depSeverityRank[depWorstSeverity(vulnDeps[j])]
-		if ri != rj {
-			return ri < rj
-		}
-		return vulnDeps[i].FileName < vulnDeps[j].FileName
-	})
+func depCVSSScore(v DepVulnerability) string {
+	if v.CVSSv3 != nil {
+		return fmt.Sprintf("%.1f v3", v.CVSSv3.BaseScore)
+	}
+	if v.CVSSv2 != nil {
+		return fmt.Sprintf("%.1f v2", v.CVSSv2.Score)
+	}
+	return "—"
+}
 
-	// Build VulnGroups: severity-ordered groups for the summary table
-	sevOrder := []string{"critical", "high", "medium", "low", "info"}
-	groupMap := make(map[string][]DepVulnEntry)
-	for _, d := range vulnDeps {
-		for _, v := range d.Vulnerabilities {
-			norm := depNormSeverity(v.Severity)
-			groupMap[norm] = append(groupMap[norm], DepVulnEntry{
-				DepName:  d.FileName,
-				CVEName:  v.Name,
-				Severity: norm,
-				CVSS:     depCVSSScore(v),
-			})
-		}
+func depRefLabel(ref DepReference) string {
+	if ref.Name != "" {
+		return ref.Name
 	}
-	vulnGroups := make([]DepVulnGroup, 0, len(sevOrder))
-	for _, sev := range sevOrder {
-		if entries, ok := groupMap[sev]; ok {
-			vulnGroups = append(vulnGroups, DepVulnGroup{Severity: sev, Entries: entries})
-		}
+	if ref.Source != "" {
+		return ref.Source
 	}
-
-	reportDate := depFormatTimestamp(r.ProjectInfo.ReportDate)
-
-	creditKeys := make([]string, 0, len(r.ProjectInfo.Credits))
-	for k := range r.ProjectInfo.Credits {
-		creditKeys = append(creditKeys, k)
-	}
-	sort.Strings(creditKeys)
-	credits := make([]DepCredit, 0, len(creditKeys))
-	for _, k := range creditKeys {
-		credits = append(credits, DepCredit{Source: k, Text: r.ProjectInfo.Credits[k]})
-	}
-
-	return DepReportData{
-		Title:          title,
-		GeneratedAt:    time.Now().UTC().Format("2006-01-02 15:04:05 UTC"),
-		ProjectName:    r.ProjectInfo.Name,
-		ReportDate:     reportDate,
-		EngineVersion:  r.ScanInfo.EngineVersion,
-		DataSources:    r.ScanInfo.DataSource,
-		Summary:        summary,
-		VulnGroups:     vulnGroups,
-		VulnerableDeps: vulnDeps,
-		CleanDeps:      cleanDeps,
-		Credits:        credits,
-		HasIssues:      summary.Vulnerable > 0,
-	}
+	return ref.URL
 }
 
 func depFormatTimestamp(s string) string {
@@ -428,44 +527,4 @@ func depMarkdownToHTML(s string) template.HTML {
 	flushList()
 
 	return template.HTML(sb.String())
-}
-
-func depCVSSScore(v DepVulnerability) string {
-	if v.CVSSv3 != nil {
-		return fmt.Sprintf("%.1f v3", v.CVSSv3.BaseScore)
-	}
-	if v.CVSSv2 != nil {
-		return fmt.Sprintf("%.1f v2", v.CVSSv2.Score)
-	}
-	return "—"
-}
-
-func depSevClass(severity string) string {
-	switch depNormSeverity(severity) {
-	case "critical":
-		return "sev-critical"
-	case "high":
-		return "sev-high"
-	case "medium":
-		return "sev-medium"
-	case "low":
-		return "sev-low"
-	default:
-		return "sev-info"
-	}
-}
-
-func depSevLabel(severity string) string {
-	switch depNormSeverity(severity) {
-	case "critical":
-		return "Critical"
-	case "high":
-		return "High"
-	case "medium":
-		return "Medium"
-	case "low":
-		return "Low"
-	default:
-		return "Info"
-	}
 }
